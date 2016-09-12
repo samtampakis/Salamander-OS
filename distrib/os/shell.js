@@ -195,7 +195,27 @@ var TSOS;
                     case "help":
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
-                    // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "ver":
+                        _StdOut.putText("Ver displays the current version of the OS.");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("Shutdown stops the OS without tampering with the hardware.");
+                        break;
+                    case "cls":
+                        _StdOut.putText("CLS CLears the Screen.");
+                        break;
+                    case "man":
+                        _StdOut.putText("Access the manual. You seem to be good at that!");
+                        break;
+                    case "trace":
+                        _StdOut.putText("Turn the OS trace on or off.");
+                        break;
+                    case "rot13":
+                        _StdOut.putText("Turns ordinary strings into super-secrets.");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("Change the prompt to something more fun.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -247,6 +267,6 @@ var TSOS;
             }
         };
         return Shell;
-    })();
+    }());
     TSOS.Shell = Shell;
 })(TSOS || (TSOS = {}));
