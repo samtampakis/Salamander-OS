@@ -52,6 +52,9 @@ var TSOS;
             // whereami
             sc = new TSOS.ShellCommand(this.shellWhereAmI, "whereami", " - Displays your location.");
             this.commandList[this.commandList.length] = sc;
+            // pizazz <string>
+            sc = new TSOS.ShellCommand(this.shellPizazz, "pizazz", "<string> - Jazz things up a bit.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -222,6 +225,9 @@ var TSOS;
                     case "whereami":
                         _StdOut.putText(" I dunno, man. Where ARE you?");
                         break;
+                    case "pizazz":
+                        _StdOut.putText("Give your boring strings a little something extra.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -274,6 +280,19 @@ var TSOS;
         };
         Shell.prototype.shellWhereAmI = function () {
             _StdOut.putText("You are on a rural planet on the edge of the Milky Way.");
+        };
+        Shell.prototype.shellPizazz = function (args) {
+            if (args.length > 0) {
+                var pizazz = "~* ";
+                for (var i = 0; i < args.length; i++) {
+                    pizazz = pizazz + args[i] + " ";
+                }
+                pizazz = pizazz + "*~";
+                _StdOut.putText(pizazz);
+            }
+            else {
+                _StdOut.putText("Usage: pizazz <string>  Please supply a string.");
+            }
         };
         return Shell;
     }());

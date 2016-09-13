@@ -85,6 +85,12 @@ module TSOS {
                                   " - Displays your location.");
             this.commandList[this.commandList.length] = sc;
             
+            // pizazz <string>
+            sc = new ShellCommand(this.shellPizazz,
+                                  "pizazz",
+                                  "<string> - Jazz things up a bit.");
+            this.commandList[this.commandList.length] = sc;
+            
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -267,6 +273,9 @@ module TSOS {
                     case "whereami":
                         _StdOut.putText(" I dunno, man. Where ARE you?");
                         break;
+                    case "pizazz":
+                        _StdOut.putText("Give your boring strings a little something extra.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -320,5 +329,17 @@ module TSOS {
             _StdOut.putText("You are on a rural planet on the edge of the Milky Way.");
         }
         
+        public shellPizazz(args){
+            if (args.length > 0){
+                var pizazz = "~* ";
+                for(var i = 0; i < args.length; i++){
+                    pizazz = pizazz + args[i] + " ";
+                }
+                pizazz = pizazz + "*~";
+                _StdOut.putText(pizazz);
+            } else {
+                _StdOut.putText("Usage: pizazz <string>  Please supply a string.");
+            }
+        }
     }
 }
