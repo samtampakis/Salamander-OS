@@ -49,6 +49,9 @@ var TSOS;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
+            // whereami
+            sc = new TSOS.ShellCommand(this.shellWhereAmI, "whereami", " - Displays your location.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -216,6 +219,9 @@ var TSOS;
                     case "prompt":
                         _StdOut.putText("Change the prompt to something more fun.");
                         break;
+                    case "whereami":
+                        _StdOut.putText(" I dunno, man. Where ARE you?");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -265,6 +271,9 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        };
+        Shell.prototype.shellWhereAmI = function () {
+            _StdOut.putText("You are on a rural planet on the edge of the Milky Way.");
         };
         return Shell;
     }());

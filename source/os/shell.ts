@@ -79,6 +79,12 @@ module TSOS {
                                   "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
+            // whereami
+            sc = new ShellCommand(this.shellWhereAmI,
+                                  "whereami",
+                                  " - Displays your location.");
+            this.commandList[this.commandList.length] = sc;
+            
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -258,6 +264,9 @@ module TSOS {
                     case "prompt":
                         _StdOut.putText("Change the prompt to something more fun.");
                         break;
+                    case "whereami":
+                        _StdOut.putText(" I dunno, man. Where ARE you?");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -306,6 +315,10 @@ module TSOS {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
         }
-
+        
+        public shellWhereAmI() {
+            _StdOut.putText("You are on a rural planet on the edge of the Milky Way.");
+        }
+        
     }
 }
