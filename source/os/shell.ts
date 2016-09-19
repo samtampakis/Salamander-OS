@@ -103,6 +103,12 @@ module TSOS {
                                   " - Validates user input.");
             this.commandList[this.commandList.length] = sc;
             
+            // break
+            sc = new ShellCommand(this.shellBreak,
+                                  "break",
+                                  " - Self-destruct button.");
+            this.commandList[this.commandList.length] = sc;
+
             
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -295,7 +301,9 @@ module TSOS {
                     case "load":
                         _StdOut.putText("Validate code in User Program Input.");
                         break;
-                    
+                    case "break":
+                        _StdOut.putText("For when you're frustrated by how well things work.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -386,9 +394,14 @@ module TSOS {
                 _StdOut.putText("The input is valid");
             } else{
                 _StdOut.putText("Invalid input. Please review and try again.");
-            }
-            
-                
+            }  
+        }
+        
+        public shellBreak(){
+            _StdOut.clearScreen();
+            _StdOut.resetXY();
+            var error = new Interrupt(ERROR_IRQ, "");
+            _KernelInterruptQueue.enqueue(error);
         }
     }
 }

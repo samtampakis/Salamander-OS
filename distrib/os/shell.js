@@ -61,6 +61,9 @@ var TSOS;
             // load
             sc = new TSOS.ShellCommand(this.shellLoad, "load", " - Validates user input.");
             this.commandList[this.commandList.length] = sc;
+            // break
+            sc = new TSOS.ShellCommand(this.shellBreak, "break", " - Self-destruct button.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -240,6 +243,9 @@ var TSOS;
                     case "load":
                         _StdOut.putText("Validate code in User Program Input.");
                         break;
+                    case "break":
+                        _StdOut.putText("For when you're frustrated by how well things work.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -331,6 +337,12 @@ var TSOS;
             else {
                 _StdOut.putText("Invalid input. Please review and try again.");
             }
+        };
+        Shell.prototype.shellBreak = function () {
+            _StdOut.clearScreen();
+            _StdOut.resetXY();
+            var error = new TSOS.Interrupt(ERROR_IRQ, "");
+            _KernelInterruptQueue.enqueue(error);
         };
         return Shell;
     }());
