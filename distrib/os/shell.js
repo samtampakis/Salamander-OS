@@ -58,6 +58,9 @@ var TSOS;
             // date
             sc = new TSOS.ShellCommand(this.shellDate, "date", " - Displays the time.");
             this.commandList[this.commandList.length] = sc;
+            // load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", " - Validates user input.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -231,6 +234,12 @@ var TSOS;
                     case "pizazz":
                         _StdOut.putText("Give your boring strings a little something extra.");
                         break;
+                    case "date":
+                        _StdOut.putText("Even cooler than the average watch.");
+                        break;
+                    case "load":
+                        _StdOut.putText("Validate code in User Program Input.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -302,6 +311,26 @@ var TSOS;
             var date = new Date(time);
             var dateString = "The date is " + date;
             _StdOut.putText(dateString);
+        };
+        Shell.prototype.shellLoad = function () {
+            var input = document.getElementById("taProgramInput").value;
+            var isValid = true;
+            for (var i = 0; i < input.length; i++) {
+                var charCode = input.charCodeAt(i);
+                if (charCode == 32 || (charCode > 47 && charCode < 58) || (charCode > 64 && charCode < 71)) {
+                    continue;
+                }
+                else {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) {
+                _StdOut.putText("The input is valid");
+            }
+            else {
+                _StdOut.putText("Invalid input. Please review and try again.");
+            }
         };
         return Shell;
     }());
