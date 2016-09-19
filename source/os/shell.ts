@@ -91,6 +91,12 @@ module TSOS {
                                   "<string> - Jazz things up a bit.");
             this.commandList[this.commandList.length] = sc;
             
+            // date
+            sc = new ShellCommand(this.shellDate,
+                                  "date",
+                                  " - Displays the time.");
+            this.commandList[this.commandList.length] = sc;
+            
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -340,6 +346,13 @@ module TSOS {
             } else {
                 _StdOut.putText("Usage: pizazz <string>  Please supply a string.");
             }
+        }
+        
+        public shellDate(){
+            var time = new Date().getTime();
+            var date = new Date(time);
+            var dateString = "The date is " + date;
+            _StdOut.putText(dateString);
         }
     }
 }
