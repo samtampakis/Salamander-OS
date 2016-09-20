@@ -78,7 +78,7 @@ var TSOS;
         Console.prototype.removeText = function (text) {
             var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
             this.currentXPosition = this.currentXPosition - offset;
-            _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize);
+            _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize + _FontHeightMargin);
         };
         Console.prototype.advanceLine = function () {
             this.currentXPosition = 0;
@@ -87,10 +87,23 @@ var TSOS;
              * Font descent measures from the baseline to the lowest point in the font.
              * Font height margin is extra spacing between the lines.
              */
-            this.currentYPosition += _DefaultFontSize +
+            var yPositionOffset = _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
-            // TODO: Handle scrolling. (iProject 1)
+            if (this.currentYPosition + yPositionOffset > _Canvas.height) {
+                var tempCanvas = document.createElement('canvas');
+                tempCanvas.height = _Canvas.height;
+                tempCanvas.width = _Canvas.width;
+                var tempContext = tempCanvas.getContext("2d");
+                tempContext.drawImage(_Canvas, 0, 0);
+                this.clearScreen();
+                this.resetXY();
+                _DrawingContext.drawImage(tempCanvas, 0, -(2 * yPositionOffset));
+                this.currentYPosition = _Canvas.height - yPositionOffset;
+            }
+            else {
+                this.currentYPosition += yPositionOffset;
+            }
         };
         return Console;
     }());
