@@ -62,6 +62,13 @@ var TSOS;
             taLog.value = str + taLog.value;
             // TODO in the future: Optionally update a log database or some streaming service.
         };
+        Control.updateTaskbar = function (currentStatus) {
+            var current = new Date().getTime();
+            var date = new Date(current);
+            var str = "status: " + currentStatus + " time: " + date;
+            var taskbar = document.getElementById("taskbar");
+            taskbar.value = str;
+        };
         //
         // Host Events
         //
@@ -99,6 +106,6 @@ var TSOS;
             // page from its cache, which is not what we want.
         };
         return Control;
-    })();
+    }());
     TSOS.Control = Control;
 })(TSOS || (TSOS = {}));

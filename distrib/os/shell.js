@@ -61,6 +61,9 @@ var TSOS;
             // load
             sc = new TSOS.ShellCommand(this.shellLoad, "load", " - Validates user input.");
             this.commandList[this.commandList.length] = sc;
+            // status <string>
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Change OS status to the specified string.");
+            this.commandList[this.commandList.length] = sc;
             // break
             sc = new TSOS.ShellCommand(this.shellBreak, "break", " - Self-destruct button.");
             this.commandList[this.commandList.length] = sc;
@@ -243,6 +246,9 @@ var TSOS;
                     case "load":
                         _StdOut.putText("Validate code in User Program Input.");
                         break;
+                    case "status":
+                        _StdOut.putText("Set a custom status for the taskbar.");
+                        break;
                     case "break":
                         _StdOut.putText("For when you're frustrated by how well things work.");
                         break;
@@ -336,6 +342,18 @@ var TSOS;
             }
             else {
                 _StdOut.putText("Invalid input. Please review and try again.");
+            }
+        };
+        Shell.prototype.shellStatus = function (args) {
+            if (args.length > 0) {
+                var newStatus = "";
+                for (var i = 0; i < args.length; i++) {
+                    newStatus += args[i] + " ";
+                }
+                _Status = newStatus;
+            }
+            else {
+                _StdOut.putText("Usage: status <string>  Please supply a string.");
             }
         };
         Shell.prototype.shellBreak = function () {

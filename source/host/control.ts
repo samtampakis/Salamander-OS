@@ -74,6 +74,14 @@ module TSOS {
             // TODO in the future: Optionally update a log database or some streaming service.
         }
 
+        
+        public static updateTaskbar(currentStatus: string): void{
+            var current: number = new Date().getTime();
+            var date: Date = new Date(current);
+            var str: string = "status: " + currentStatus + " time: " + date;
+            var taskbar = <HTMLInputElement> document.getElementById("taskbar");
+            taskbar.value = str;
+        }
 
         //
         // Host Events
