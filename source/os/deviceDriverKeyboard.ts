@@ -52,7 +52,9 @@ module TSOS {
             } else if (((keyCode >= 48) && (keyCode <= 57)) ||   // digits
                         (keyCode == 32)                     ||   // space
                         (keyCode == 8)                      ||   // backspace
-                        (keyCode == 13)) {                       // enter
+                        (keyCode == 13)                     ||   // enter
+                        (keyCode == 38)                     ||   // up arrow
+                        (keyCode == 40)){
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
             } 

@@ -10,17 +10,19 @@
 var TSOS;
 (function (TSOS) {
     var Console = (function () {
-        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer) {
+        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer, index) {
             if (currentFont === void 0) { currentFont = _DefaultFontFamily; }
             if (currentFontSize === void 0) { currentFontSize = _DefaultFontSize; }
             if (currentXPosition === void 0) { currentXPosition = 0; }
             if (currentYPosition === void 0) { currentYPosition = _DefaultFontSize; }
             if (buffer === void 0) { buffer = ""; }
+            if (index === void 0) { index = 0; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
             this.currentXPosition = currentXPosition;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
+            this.index = index;
         }
         Console.prototype.init = function () {
             this.clearScreen();
@@ -42,12 +44,30 @@ var TSOS;
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+                    _InputHistory.push(this.buffer);
+                    this.index = _InputHistory.length;
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
                 else if (chr === String.fromCharCode(8)) {
                     this.removeText(this.buffer.charAt(this.buffer.length - 1));
                     this.buffer = this.buffer.substr(0, this.buffer.length - 1);
+                }
+                else if (chr === String.fromCharCode(38)) {
+                    this.clearLine();
+                    if (this.index > 0) {
+                        this.index -= 1;
+                    }
+                    this.buffer = _InputHistory[this.index];
+                    this.putText(this.buffer);
+                }
+                else if (chr === String.fromCharCode(40)) {
+                    this.clearLine();
+                    if (this.index < _InputHistory.length - 1) {
+                        this.index += 1;
+                    }
+                    this.buffer = _InputHistory[this.index];
+                    this.putText(this.buffer);
                 }
                 else {
                     // This is a "normal" character, so ...
@@ -79,6 +99,11 @@ var TSOS;
             var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
             this.currentXPosition = this.currentXPosition - offset;
             _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize + _FontHeightMargin);
+        };
+        Console.prototype.clearLine = function () {
+            this.currentXPosition = 0;
+            //this is drawing in the wrong place
+            _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - 10, _Canvas.width, this.currentFontSize + _FontHeightMargin);
         };
         Console.prototype.advanceLine = function () {
             this.currentXPosition = 0;

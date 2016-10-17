@@ -17,7 +17,8 @@ module TSOS {
                     public currentFontSize = _DefaultFontSize,
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
-                    public buffer = "") {
+                    public buffer = "",
+                    public index = 0) {
         }
 
         public init(): void {
@@ -43,20 +44,35 @@ module TSOS {
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+                    _InputHistory.push(this.buffer);
+                    this.index = _InputHistory.length;
                     // ... and reset our buffer.
                     this.buffer = "";
                 } else if(chr === String.fromCharCode(8)){
                     this.removeText(this.buffer.charAt(this.buffer.length - 1));
                     this.buffer = this.buffer.substr(0, this.buffer.length - 1);
-                }
-                else {
+                } else if (chr === String.fromCharCode(38)) {    //up arrow
+                    this.clearLine();
+                    if(this.index > 0){
+                        this.index -= 1;
+                    }
+                    this.buffer = _InputHistory[this.index];
+                    this.putText(this.buffer);
+                } else if (chr === String.fromCharCode(40)) {   //down arrow
+                    this.clearLine();
+                    if(this.index < _InputHistory.length - 1){
+                        this.index += 1;
+                    }
+                    this.buffer = _InputHistory[this.index];
+                    this.putText(this.buffer);
+                } else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
                     // ... and add it to our buffer.
                     this.buffer += chr;
                 }
-                // TODO: Write a case for Ctrl-C.
+                // TODO: Write a case for Ctrl-C. 
             }
         }
 
@@ -84,7 +100,12 @@ module TSOS {
             _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize + _FontHeightMargin);
          }
 
-
+        public clearLine(): void {
+            this.currentXPosition = 0;
+            //this is drawing in the wrong place
+            _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - 10, _Canvas.width, this.currentFontSize + _FontHeightMargin);           
+        }
+         
         public advanceLine(): void {
             this.currentXPosition = 0;
             /*

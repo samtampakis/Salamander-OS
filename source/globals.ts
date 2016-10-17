@@ -49,6 +49,8 @@ var _KernelInterruptQueue;          // Initializing this to null (which I would 
 var _KernelInputQueue: any = null;  // Is this better? I don't like uninitialized variables. But I also don't like using the type specifier 'any'
 var _KernelBuffers: any[] = null;   // when clearly 'any' is not what we want. There is likely a better way, but what is it?
 
+var _InputHistory: any[] = null;  // Keep track of user inputs
+
 // Standard input and output
 var _StdIn;    // Same "to null or not to null" issue as above.
 var _StdOut;
