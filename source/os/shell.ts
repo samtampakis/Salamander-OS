@@ -227,6 +227,7 @@ module TSOS {
             }
         }
 
+        
         public shellCurse() {
             _StdOut.putText("Oh, so that's how it's going to be, eh? Fine.");
             _StdOut.advanceLine();
@@ -394,7 +395,7 @@ module TSOS {
             var i = 0
             if(isNaN(input.charCodeAt(0))){
                 isValid = false;
-                }
+            }
             while(isValid && i < input.length){
                 var charCode = input.charCodeAt(i);
                 if(!(charCode == 32 || (charCode > 47 && charCode < 58) || (charCode > 64 && charCode < 71))){
@@ -404,7 +405,25 @@ module TSOS {
             }
             
             if(isValid){
-                _StdOut.putText("The input is valid");
+                _MemoryManager.data = input;
+                
+                //load memory into hardware
+                for(var i = _MemoryManager.base ; (i < _MemoryManager.data.length && i < _MemoryManager.limit); i++){
+                    _CoreMemory.memory[i] = _MemoryManager.data[i];
+                }
+                
+                //set pid
+                var pid = _PID;
+                _PID++;
+                
+                //create PCB and add it to global array
+                var pcb = new PCB("Ready", pid, new Cpu(), 255, _MemoryManager);
+                _PCBArray[pid] = pcb;
+                
+                //print pid
+                _StdOut.putText("Process ID: " + pid);
+                console.log(_PCBArray);
+                console.log(_CoreMemory);
             } else{
                 _StdOut.putText("Invalid input. Please review and try again.");
             }  
@@ -428,6 +447,7 @@ module TSOS {
             var error = new Interrupt(ERROR_IRQ, "");
             _KernelInterruptQueue.enqueue(error);
         }
+        
     }
 }
  
