@@ -390,14 +390,16 @@ module TSOS {
         public shellLoad(){
             var input = document.getElementById("taProgramInput").value;
             var isValid = true;
-            for(var i = 0; i < input.length; i++){
-                var charCode = input.charCodeAt(i);
-                if(charCode == 32 || (charCode > 47 && charCode < 58) || (charCode > 64 && charCode < 71)){
-                    continue;
-                } else{
-                    isValid = false;
-                    break;
+            var i = 0
+            if(isNaN(input.charCodeAt(0))){
+                isValid = false;
                 }
+            while(isValid && i < input.length){
+                var charCode = input.charCodeAt(i);
+                if(!(charCode == 32 || (charCode > 47 && charCode < 58) || (charCode > 64 && charCode < 71))){
+                    isValid = false;
+                } 
+                i++;
             }
             
             if(isValid){
