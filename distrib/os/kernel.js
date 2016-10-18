@@ -37,6 +37,10 @@ var TSOS;
             _krnKeyboardDriver = new TSOS.DeviceDriverKeyboard(); // Construct it.
             _krnKeyboardDriver.driverEntry(); // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
+            //Initialize memory manager
+            _MemoryManager = new TSOS.MemoryManager(0, 255, null);
+            //Initialize PCB Array
+            _PCBArray = new Array();
             //
             // ... more?
             //

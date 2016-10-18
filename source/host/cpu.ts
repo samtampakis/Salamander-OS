@@ -14,6 +14,9 @@
 
      This code references page numbers in the text book:
      Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 978-0-470-12872-5
+     
+     Temporarily hosting the definition for core memory here because constructor is not being recognized when it
+     is hosted in its own file.
      ------------ */
 
 module TSOS {
@@ -101,6 +104,11 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+        }
+    }
+    
+    export class CoreMemory {
+        constructor(public memory = []) {
         }
     }
 }

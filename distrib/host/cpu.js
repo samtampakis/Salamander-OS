@@ -13,6 +13,9 @@
 
      This code references page numbers in the text book:
      Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 978-0-470-12872-5
+     
+     Temporarily hosting the definition for core memory here because constructor is not being recognized when it
+     is hosted in its own file.
      ------------ */
 var TSOS;
 (function (TSOS) {
@@ -90,4 +93,12 @@ var TSOS;
         return Cpu;
     }());
     TSOS.Cpu = Cpu;
+    var CoreMemory = (function () {
+        function CoreMemory(memory) {
+            if (memory === void 0) { memory = []; }
+            this.memory = memory;
+        }
+        return CoreMemory;
+    }());
+    TSOS.CoreMemory = CoreMemory;
 })(TSOS || (TSOS = {}));
