@@ -427,6 +427,7 @@ module TSOS {
             
                 var currentPCB = _PCBArray[pid]
                 var lookingForOpCode = true;
+                var numArgs;
             
             
                 for(var i = 0; i < (currentPCB.memoryLimits.limit - currentPCB.memoryLimits.base); i+=2){
@@ -437,23 +438,31 @@ module TSOS {
                         var foundCode = false;
                         var j = 0;
                         while(foundCode == false && j < _OPCodes.length){
-                            if(lookup == _OPCodes[i].command){
+                            if(lookup == _OPCodes[j].command){
                                foundCode = true;
-                               var newOpCode = _OPCodes[i]
+                               var newOpCode = _OPCodes[j];
+                               numArgs = newOpCode.numArgs;
+                               if(numArgs > 0){
+                                   lookingForOpCode = false;
+                               }                                
                                retVal[i] = newOpCode;
                             }
                         j++;
                         }
                         if (foundCode == false){
-                        retVal[i] = lookup;
+                            retVal[i] = lookup;
                         }
                     } else{
-                        
+                        retVal[i] = lookup;
+                        numArgs--;
+                        if(numArgs <= 0){
+                            lookingForOpCode = true;
+                        }  
                     }  
                 }
            
                 currentPCB.memoryLimits.data = retVal;
-                console.log(currentPCB);
+                _CoreMemory.memory = retVal;
                 
                 //print pid
                 _StdOut.putText("Process ID: " + pid);

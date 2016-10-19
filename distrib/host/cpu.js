@@ -1,5 +1,5 @@
 ///<reference path="../globals.ts" />
-///<reference path="../os/userCommand.ts" />
+///<reference path="../os/shell.ts" />
 /* ------------
      CPU.ts
 
@@ -14,7 +14,7 @@
      This code references page numbers in the text book:
      Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 978-0-470-12872-5
      
-     Temporarily hosting the definition for core memory here because constructor is not being recognized when it
+     Temporarily hosting the definition for core memory and op codes here because constructor is not being recognized when it
      is hosted in its own file.
      ------------ */
 var TSOS;
@@ -33,7 +33,6 @@ var TSOS;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
             this.isExecuting = isExecuting;
-            this.opCodes = [];
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -43,62 +42,165 @@ var TSOS;
             this.Zflag = 0;
             this.isExecuting = false;
             var uc;
+            _OPCodes = [];
             //
             // Load the opCodes list.
             // LDA
-            uc = new TSOS.UserCommand("A9");
-            this.opCodes[this.opCodes.length] = uc;
-            uc = new TSOS.UserCommand("AD");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("A9", 1, this.loadCommand);
+            _OPCodes[_OPCodes.length] = uc;
+            uc = new OpCode("AD", 2, this.loadCommand);
+            _OPCodes[_OPCodes.length] = uc;
             // STA
-            uc = new TSOS.UserCommand("8D");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("8D", 2, this.storeCommand);
+            _OPCodes[_OPCodes.length] = uc;
             //ADC
-            uc = new TSOS.UserCommand("6D");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("6D", 2, this.add);
+            _OPCodes[_OPCodes.length] = uc;
             //LDX
-            uc = new TSOS.UserCommand("A2");
-            this.opCodes[this.opCodes.length] = uc;
-            uc = new TSOS.UserCommand("AE");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("A2", 1, this.loadX);
+            _OPCodes[_OPCodes.length] = uc;
+            uc = new OpCode("AE", 2, this.loadX);
+            _OPCodes[_OPCodes.length] = uc;
             //LDY
-            uc = new TSOS.UserCommand("A0");
-            this.opCodes[this.opCodes.length] = uc;
-            uc = new TSOS.UserCommand("AC");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("A0", 1, this.loadY);
+            _OPCodes[_OPCodes.length] = uc;
+            uc = new OpCode("AC", 2, this.loadY);
+            _OPCodes[_OPCodes.length] = uc;
             //NOP
-            uc = new TSOS.UserCommand("EA");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("EA", 0, this.noOp);
+            _OPCodes[_OPCodes.length] = uc;
             //BRK
-            uc = new TSOS.UserCommand("00");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("00", 0, this.breakCommand);
+            _OPCodes[_OPCodes.length] = uc;
             //CPX
-            uc = new TSOS.UserCommand("EC");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("EC", 2, this.compare);
+            _OPCodes[_OPCodes.length] = uc;
             //BNE        
-            uc = new TSOS.UserCommand("D0");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("D0", 1, this.branch);
+            _OPCodes[_OPCodes.length] = uc;
             //INC
-            uc = new TSOS.UserCommand("EE");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("EE", 2, this.increment);
+            _OPCodes[_OPCodes.length] = uc;
             //SYS
-            uc = new TSOS.UserCommand("FF");
-            this.opCodes[this.opCodes.length] = uc;
+            uc = new OpCode("FF", 0, this.sysCall);
+            _OPCodes[_OPCodes.length] = uc;
+        };
+        //Op Code function definitions
+        Cpu.prototype.loadCommand = function (args) {
+            if (args.length == 1) {
+                this.Acc = parseInt(args[0], 16);
+            }
+            else if (args.length == 2) {
+                var memLocation = args[0] + args[1];
+                this.Acc = _CoreMemory.memory[parseInt(memLocation, 16)];
+            }
+        };
+        Cpu.prototype.storeCommand = function (args) {
+            var memLocation = args[0] + args[1];
+            _CoreMemory.memory[parseInt(memLocation, 16)] = this.Acc;
+        };
+        Cpu.prototype.add = function (args) {
+            var memLocation = args[0] + args[1];
+            this.Acc = this.Acc + _CoreMemory.memory[parseInt(memLocation, 16)];
+        };
+        Cpu.prototype.loadX = function (args) {
+            if (args.length == 1) {
+                this.Xreg = parseInt(args[0], 16);
+            }
+            else if (args.length == 2) {
+                var memLocation = args[0] + args[1];
+                this.Xreg = _CoreMemory.memory[parseInt(memLocation, 16)];
+            }
+        };
+        Cpu.prototype.loadY = function (args) {
+            if (args.length == 1) {
+                this.Yreg = parseInt(args[0], 16);
+            }
+            else if (args.length == 2) {
+                var memLocation = args[0] + args[1];
+                this.Yreg = _CoreMemory.memory[parseInt(memLocation, 16)];
+            }
+        };
+        Cpu.prototype.noOp = function (args) {
+        };
+        Cpu.prototype.breakCommand = function (args) {
+            this.isExecuting = false;
+        };
+        Cpu.prototype.compare = function (args) {
+            var memLocation = args[0] + args[1];
+            var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+            if (this.Xreg == parseInt(memVal, 16)) {
+                this.Zflag = 1;
+            }
+        };
+        Cpu.prototype.branch = function (args) {
+            if (this.Zflag == 0) {
+                this.PC = this.PC + parseInt(args[0], 16) - 1;
+            }
+        };
+        Cpu.prototype.increment = function (args) {
+            var memLocation = args[0] + args[1];
+            var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+            memVal++;
+            _CoreMemory.memory[parseInt(memLocation, 16)] = memVal;
+        };
+        Cpu.prototype.sysCall = function (args) {
+            if (this.Xreg == 1) {
+                _StdOut.putText(this.Yreg);
+            }
+            else if (this.Xreg == 2) {
+                var stringCode = this.Yreg;
+                _StdOut.putText(String.fromCharCode(stringCode));
+            }
+        };
+        Cpu.prototype.execute = function (fn, args) {
+            _StdOut.advanceLine();
+            // ... call the command function passing in the args with some über-cool functional programming ...
+            fn(args);
+            // Check to see if we need to advance the line again
         };
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            //Fetch
+            var runningPCB = _PCBArray[_RunningPID];
+            //Decode
+            var fn = _CoreMemory.memory[_CoreMemory.currentLocation];
+            _CoreMemory.currentLocation++;
+            var args = Array();
+            var counter = fn.numArgs;
+            while (counter > 0) {
+                args.push(_CoreMemory[_CoreMemory.currentLocation]);
+                _CoreMemory.currentLocation++;
+                counter--;
+            }
+            //Execute
+            this.execute(fn, args);
+            _PCBArray[_RunningPID].memoryLimits.base = _CoreMemory.currentLocation;
         };
         return Cpu;
     }());
     TSOS.Cpu = Cpu;
+    //Temporary hosting of CoreMemory class
     var CoreMemory = (function () {
-        function CoreMemory(memory) {
+        function CoreMemory(memory, currentLocation) {
             if (memory === void 0) { memory = []; }
+            if (currentLocation === void 0) { currentLocation = 0; }
             this.memory = memory;
+            this.currentLocation = currentLocation;
         }
         return CoreMemory;
     }());
     TSOS.CoreMemory = CoreMemory;
+    //Temporary hosting of OpCode class
+    var OpCode = (function () {
+        function OpCode(command, numArgs, func) {
+            this.command = command;
+            this.numArgs = numArgs;
+            this.func = func;
+        }
+        return OpCode;
+    }());
+    TSOS.OpCode = OpCode;
 })(TSOS || (TSOS = {}));

@@ -47,11 +47,12 @@ module TSOS {
             // Load the opCodes list.
 
             // LDA
-           /* uc = new OpCode("A9", 1, this.loadCommand);
+            uc = new OpCode("A9", 1, this.loadCommand);
             _OPCodes[_OPCodes.length] = uc;
             
             uc = new OpCode("AD", 2, this.loadCommand);
             _OPCodes[_OPCodes.length] = uc;            
+
 
             // STA
             uc = new OpCode("8D", 2, this.storeCommand);
@@ -76,11 +77,11 @@ module TSOS {
             _OPCodes[_OPCodes.length] = uc;
         
             //NOP
-            uc = new OpCode("EA", 0, null);
+            uc = new OpCode("EA", 0, this.noOp);
             _OPCodes[_OPCodes.length] = uc;
         
             //BRK
-            uc = new OpCode("00", 0, shellBreak());
+            uc = new OpCode("00", 0, this.breakCommand);
             _OPCodes[_OPCodes.length] = uc;
         
             //CPX
@@ -97,10 +98,84 @@ module TSOS {
         
             //SYS
             uc = new OpCode("FF", 0, this.sysCall);
-            _OPCodes[_OPCodes.length] = uc;*/
+            _OPCodes[_OPCodes.length] = uc;
         }
         
+        //Op Code function definitions
+       public loadCommand(args){
+           if(args.length == 1){
+               this.Acc = parseInt(args[0], 16);
+           }               
+           else if(args.length == 2){
+               var memLocation = args[0] + args[1];
+               this.Acc = _CoreMemory.memory[parseInt(memLocation, 16)];
+           }
+       }
+       
+       public storeCommand(args){
+           var memLocation = args[0] + args[1];
+           _CoreMemory.memory[parseInt(memLocation, 16)] = this.Acc;
+       }
 
+       public add(args){
+           var memLocation = args[0] + args[1];
+           this.Acc = this.Acc + _CoreMemory.memory[parseInt(memLocation, 16)];
+       }
+       
+       public loadX(args){
+           if(args.length == 1){
+               this.Xreg = parseInt(args[0], 16);
+           } else if (args.length == 2){
+               var memLocation = args[0] + args[1];
+               this.Xreg = _CoreMemory.memory[parseInt(memLocation, 16)];
+           }
+       }
+       
+       public loadY(args){
+           if(args.length == 1){
+               this.Yreg = parseInt(args[0], 16);
+           } else if (args.length == 2){
+               var memLocation = args[0] + args[1];
+               this.Yreg = _CoreMemory.memory[parseInt(memLocation, 16)];
+           }
+       }
+       
+       public noOp(args){
+       }
+       
+       public breakCommand(args){
+            this.isExecuting = false;
+       }
+       
+       public compare(args){
+            var memLocation = args[0] + args[1];
+            var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+            if(this.Xreg == parseInt(memVal, 16)){
+                this.Zflag = 1;
+            }
+       }
+       
+       public branch(args){
+           if(this.Zflag == 0){
+                this.PC = this.PC + parseInt(args[0], 16) - 1;
+           }
+       }
+       
+       public increment(args){
+           var memLocation = args[0] + args[1];
+           var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+           memVal ++;
+           _CoreMemory.memory[parseInt(memLocation, 16)] = memVal;
+       }
+       
+       public sysCall(args){
+           if(this.Xreg == 1){
+               _StdOut.putText(this.Yreg);
+           } else if (this.Xreg == 2){
+               var stringCode = this.Yreg;
+                _StdOut.putText(String.fromCharCode(stringCode));
+           }
+       }
 
         public execute(fn, args?) {
             _StdOut.advanceLine();
