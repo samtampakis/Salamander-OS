@@ -2,7 +2,6 @@
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
 ///<reference path="userCommand.ts" />
-///<reference path="../host/cpu.ts" />
 
 
 /* ------------
@@ -23,7 +22,7 @@ module TSOS {
         public commandList = [];
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
-
+       
         constructor() {
         }
 
@@ -102,6 +101,12 @@ module TSOS {
             sc = new ShellCommand(this.shellLoad,
                                   "load",
                                   " - Validates user input.");
+            this.commandList[this.commandList.length] = sc;
+            
+            // run <pid>
+            sc = new ShellCommand(this.shellRun,
+                                  "run",
+                                  "<pid> - Executes the specified program.");
             this.commandList[this.commandList.length] = sc;
             
             // status <string>
@@ -396,9 +401,11 @@ module TSOS {
             if(isNaN(input.charCodeAt(0))){
                 isValid = false;
             }
+            input = input.replace(/ /g,'');
+
             while(isValid && i < input.length){
                 var charCode = input.charCodeAt(i);
-                if(!(charCode == 32 || (charCode > 47 && charCode < 58) || (charCode > 64 && charCode < 71))){
+                if(!((charCode > 47 && charCode < 58) || (charCode > 64 && charCode < 71))){
                     isValid = false;
                 } 
                 i++;
@@ -407,26 +414,62 @@ module TSOS {
             if(isValid){
                 _MemoryManager.data = input;
                 
-                //load memory into hardware
-                for(var i = _MemoryManager.base ; (i < _MemoryManager.data.length && i < _MemoryManager.limit); i++){
-                    _CoreMemory.memory[i] = _MemoryManager.data[i];
-                }
-                
                 //set pid
                 var pid = _PID;
                 _PID++;
                 
                 //create PCB and add it to global array
-                var pcb = new PCB("Ready", pid, new Cpu(), 255, _MemoryManager);
+                var pcb = new PCB("Ready", pid, new Cpu(), _MemoryManager);
                 _PCBArray[pid] = pcb;
+                
+                //load Memory in CPU
+                var retVal = new Array();
+            
+                var currentPCB = _PCBArray[pid]
+                var lookingForOpCode = true;
+            
+            
+                for(var i = 0; i < (currentPCB.memoryLimits.limit - currentPCB.memoryLimits.base); i+=2){
+                
+                    var lookup = currentPCB.memoryLimits.data.charAt(i) + currentPCB.memoryLimits.data.charAt(i+1);
+                    
+                    if(lookingForOpCode){
+                        var foundCode = false;
+                        var j = 0;
+                        while(foundCode == false && j < _OPCodes.length){
+                            if(lookup == _OPCodes[i].command){
+                               foundCode = true;
+                               var newOpCode = _OPCodes[i]
+                               retVal[i] = newOpCode;
+                            }
+                        j++;
+                        }
+                        if (foundCode == false){
+                        retVal[i] = lookup;
+                        }
+                    } else{
+                        
+                    }  
+                }
+           
+                currentPCB.memoryLimits.data = retVal;
+                console.log(currentPCB);
                 
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
-                console.log(_PCBArray);
-                console.log(_CoreMemory);
             } else{
                 _StdOut.putText("Invalid input. Please review and try again.");
             }  
+        }
+
+        
+        public shellRun(args){
+            if (args.length > 0){
+                _RunningPID = args;
+                _CPU.isExecuting = true;
+            } else {
+                _StdOut.putText("Usage: run <pid>  Please supply a pid.");
+            }
         }
         
         public shellStatus(args){

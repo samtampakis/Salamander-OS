@@ -29,6 +29,8 @@ const ERROR_IRQ: number = 2;
 //
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
 
+var _CoreMemory: TSOS.CoreMemory;
+
 var _OSclock: number = 0;  // Page 23.
 
 var _Mode: number = 0;     // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
@@ -50,6 +52,13 @@ var _KernelInputQueue: any = null;  // Is this better? I don't like uninitialize
 var _KernelBuffers: any[] = null;   // when clearly 'any' is not what we want. There is likely a better way, but what is it?
 
 var _InputHistory: any[] = null;  // Keep track of user inputs
+
+var _OPCodes: any[] = null;
+
+var _MemoryManager: TSOS.MemoryManager;
+var _PCBArray: any[] = null;
+var _PID: number = 0;
+var _RunningPID: number;
 
 // Standard input and output
 var _StdIn;    // Same "to null or not to null" issue as above.
