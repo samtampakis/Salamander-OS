@@ -446,14 +446,17 @@ module TSOS {
                                    lookingForOpCode = false;
                                }                                
                                retVal[i] = newOpCode;
+                               retVal[i+1] = "";
                             }
                         j++;
                         }
                         if (foundCode == false){
-                            retVal[i] = lookup;
+                            retVal[i] = currentPCB.memoryLimits.data.charAt(i);
+                            retVal[i+1] = currentPCB.memoryLimits.data.charAt(i);
                         }
                     } else{
-                        retVal[i] = lookup;
+                        retVal[i] = currentPCB.memoryLimits.data.charAt(i);
+                        retVal[i+1] = currentPCB.memoryLimits.data.charAt(i);
                         numArgs--;
                         if(numArgs <= 0){
                             lookingForOpCode = true;
@@ -462,7 +465,8 @@ module TSOS {
                 }
            
                 currentPCB.memoryLimits.data = retVal;
-                _CoreMemory.memory = retVal;
+                _CoreMemory.memory = retVal
+                console.log(_CoreMemory.memory);
                 
                 //print pid
                 _StdOut.putText("Process ID: " + pid);

@@ -144,7 +144,7 @@ module TSOS {
        }
        
        public breakCommand(args){
-            this.isExecuting = false;
+            _CPU.isExecuting = false;
        }
        
        public compare(args){
@@ -195,19 +195,25 @@ module TSOS {
             var runningPCB = _PCBArray[_RunningPID];
             
             //Decode
-            var fn = _CoreMemory.memory[_CoreMemory.currentLocation];
-            _CoreMemory.currentLocation++;
-            var args = Array();
-            var counter = fn.numArgs;
-            while(counter > 0){
-                args.push(_CoreMemory[_CoreMemory.currentLocation]);
-                _CoreMemory.currentLocation++;
-                counter --;
-            }            
+
+            var fn = _CoreMemory.memory[_CoreMemory.currentLocation].func;
+            console.log(fn);
+            var args = Array();  
+            var counter = _CoreMemory.memory[_CoreMemory.currentLocation].numArgs;
+
+            while (counter > 0){
+              _CoreMemory.currentLocation+= 2;
+              args.push(_CoreMemory.memory[_CoreMemory.currentLocation]);             
+              counter --;
+            }
+            console.log(args)
+            _CoreMemory.currentLocation+= 2;
+                        
             
             //Execute
             this.execute(fn, args);
-            _PCBArray[_RunningPID].memoryLimits.base = _CoreMemory.currentLocation;
+            console.log(this);
+            _PCBArray[_RunningPID].cpu = this;
             
             }
             

@@ -124,7 +124,7 @@ var TSOS;
         Cpu.prototype.noOp = function (args) {
         };
         Cpu.prototype.breakCommand = function (args) {
-            this.isExecuting = false;
+            _CPU.isExecuting = false;
         };
         Cpu.prototype.compare = function (args) {
             var memLocation = args[0] + args[1];
@@ -166,18 +166,21 @@ var TSOS;
             //Fetch
             var runningPCB = _PCBArray[_RunningPID];
             //Decode
-            var fn = _CoreMemory.memory[_CoreMemory.currentLocation];
-            _CoreMemory.currentLocation++;
+            var fn = _CoreMemory.memory[_CoreMemory.currentLocation].func;
+            console.log(fn);
             var args = Array();
-            var counter = fn.numArgs;
+            var counter = _CoreMemory.memory[_CoreMemory.currentLocation].numArgs;
             while (counter > 0) {
-                args.push(_CoreMemory[_CoreMemory.currentLocation]);
-                _CoreMemory.currentLocation++;
+                _CoreMemory.currentLocation += 2;
+                args.push(_CoreMemory.memory[_CoreMemory.currentLocation]);
                 counter--;
             }
+            console.log(args);
+            _CoreMemory.currentLocation += 2;
             //Execute
             this.execute(fn, args);
-            _PCBArray[_RunningPID].memoryLimits.base = _CoreMemory.currentLocation;
+            console.log(this);
+            _PCBArray[_RunningPID].cpu = this;
         };
         return Cpu;
     }());
