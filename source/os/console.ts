@@ -139,7 +139,7 @@ module TSOS {
                                   _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                   _FontHeightMargin;
 
-            if (this.currentYPosition + yPositionOffset > _Canvas.height){               
+            if (this.currentYPosition + (2* yPositionOffset) > _Canvas.height){               
                 var tempCanvas = document.createElement('canvas');
                 tempCanvas.height = _Canvas.height;
                 tempCanvas.width = _Canvas.width;
@@ -147,7 +147,7 @@ module TSOS {
                 tempContext.drawImage(_Canvas,0,0);
                 this.clearScreen();
                 this.resetXY();
-                _DrawingContext.drawImage(tempCanvas,0, -(2* yPositionOffset));
+                _DrawingContext.drawImage(tempCanvas,0, -(yPositionOffset);
                 this.currentYPosition = _Canvas.height - yPositionOffset;
             } else{
                 this.currentYPosition += yPositionOffset;
