@@ -53,12 +53,30 @@ var TSOS;
                     this.removeText(this.buffer.charAt(this.buffer.length - 1));
                     this.buffer = this.buffer.substr(0, this.buffer.length - 1);
                 }
+                else if (chr === String.fromCharCode(9)) {
+                    this.clearLine();
+                    var temp = -1;
+                    var i = 0;
+                    while (temp != 0 && i < _OsShell.commandList.length) {
+                        temp = _OsShell.commandList[i].command.indexOf(this.buffer);
+                        if (temp == 0) {
+                            this.buffer = _OsShell.commandList[i].command;
+                        }
+                        i++;
+                    }
+                    if (temp != 0) {
+                        this.buffer = "No such command.";
+                    }
+                    _OsShell.putPrompt();
+                    this.putText(this.buffer);
+                }
                 else if (chr === String.fromCharCode(18)) {
                     this.clearLine();
                     if (this.index > 0) {
                         this.index -= 1;
                     }
                     this.buffer = _InputHistory[this.index];
+                    _OsShell.putPrompt();
                     this.putText(this.buffer);
                 }
                 else if (chr === String.fromCharCode(20)) {
@@ -67,6 +85,7 @@ var TSOS;
                         this.index += 1;
                     }
                     this.buffer = _InputHistory[this.index];
+                    _OsShell.putPrompt();
                     this.putText(this.buffer);
                 }
                 else {
