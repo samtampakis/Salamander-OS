@@ -53,7 +53,7 @@ var TSOS;
                     this.removeText(this.buffer.charAt(this.buffer.length - 1));
                     this.buffer = this.buffer.substr(0, this.buffer.length - 1);
                 }
-                else if (chr === String.fromCharCode(38)) {
+                else if (chr === String.fromCharCode(18)) {
                     this.clearLine();
                     if (this.index > 0) {
                         this.index -= 1;
@@ -61,7 +61,7 @@ var TSOS;
                     this.buffer = _InputHistory[this.index];
                     this.putText(this.buffer);
                 }
-                else if (chr === String.fromCharCode(40)) {
+                else if (chr === String.fromCharCode(20)) {
                     this.clearLine();
                     if (this.index < _InputHistory.length - 1) {
                         this.index += 1;

@@ -59,7 +59,6 @@ module TSOS {
                 // Convert Arrows into non-printable characters
                 if ((keyCode == 38) || (keyCode == 40)){
                     keyCode -= 20;
-                    console.log(String.fromCharCode(keyCode));
                 }
                 
                 
