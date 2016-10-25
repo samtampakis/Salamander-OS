@@ -395,7 +395,7 @@ module TSOS {
         }
         
         public shellLoad(){
-            var input = document.getElementById("taProgramInput").value;
+            var input = Control.getProgram();
             var isValid = true;
             var i = 0
             if(isNaN(input.charCodeAt(0))){

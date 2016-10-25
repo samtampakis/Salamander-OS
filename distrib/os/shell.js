@@ -328,7 +328,7 @@ var TSOS;
             _StdOut.putText(dateString);
         };
         Shell.prototype.shellLoad = function () {
-            var input = document.getElementById("taProgramInput").value;
+            var input = TSOS.Control.getProgram();
             var isValid = true;
             var i = 0;
             if (isNaN(input.charCodeAt(0))) {

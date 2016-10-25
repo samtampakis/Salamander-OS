@@ -142,7 +142,7 @@ var TSOS;
                 tempContext.drawImage(_Canvas, 0, 0);
                 this.clearScreen();
                 this.resetXY();
-                _DrawingContext.drawImage(tempCanvas, 0, -(yPositionOffset));
+                _DrawingContext.drawImage(tempCanvas, 0, -yPositionOffset);
                 this.currentYPosition = _Canvas.height - yPositionOffset;
             }
             else {

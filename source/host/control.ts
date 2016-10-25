@@ -83,6 +83,12 @@ module TSOS {
             var taskbar = <HTMLInputElement> document.getElementById("taskbar");
             taskbar.value = str;
         }
+        
+        public static getProgram(){
+            var input = <HTMLInputElement>document.getElementById("taProgramInput")
+            return input.value;
+        
+        }
 
         //
         // Host Events

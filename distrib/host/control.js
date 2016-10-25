@@ -69,6 +69,10 @@ var TSOS;
             var taskbar = document.getElementById("taskbar");
             taskbar.value = str;
         };
+        Control.getProgram = function () {
+            var input = document.getElementById("taProgramInput");
+            return input.value;
+        };
         //
         // Host Events
         //
