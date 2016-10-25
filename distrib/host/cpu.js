@@ -87,7 +87,10 @@ var TSOS;
         };
         //Op Code function definitions
         Cpu.prototype.loadCommand = function (args) {
+            console.log("in loadCommand");
             if (args.length == 1) {
+                console.log("branch 1");
+                console.log(args[0]);
                 this.Acc = parseInt(args[0], 16);
             }
             else if (args.length == 2) {
@@ -155,24 +158,24 @@ var TSOS;
         };
         Cpu.prototype.execute = function (fn, args) {
             _StdOut.advanceLine();
-            // ... call the command function passing in the args with some über-cool functional programming ...
+            console.log("in execute");
             fn(args);
-            // Check to see if we need to advance the line again
         };
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            console.log(_CoreMemory.memory[_CoreMemory.currentLocation]);
             //Fetch
-            var runningPCB = _PCBArray[_RunningPID];
-            //Decode
             var fn = _CoreMemory.memory[_CoreMemory.currentLocation].func;
-            console.log(fn);
+            //Decode
             var args = Array();
             var counter = _CoreMemory.memory[_CoreMemory.currentLocation].numArgs;
+            TSOS.Control.displayRunningStatus(_CoreMemory.memory[_CoreMemory.currentLocation].command);
             while (counter > 0) {
                 _CoreMemory.currentLocation += 2;
-                args.push(_CoreMemory.memory[_CoreMemory.currentLocation]);
+                var data = parseInt(_CoreMemory.memory[_CoreMemory.currentLocation] + _CoreMemory.memory[_CoreMemory.currentLocation + 1], 16);
+                args.push(data);
                 counter--;
             }
             console.log(args);

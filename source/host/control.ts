@@ -84,10 +84,18 @@ module TSOS {
             taskbar.value = str;
         }
         
-        public static getProgram(){
-            var input = <HTMLInputElement>document.getElementById("taProgramInput")
+        public static getProgram(): string{
+            var input = <HTMLInputElement>document.getElementById("taProgramInput");
             return input.value;
+        }
         
+        public static displayRunningStatus(ir: string): void{
+            document.getElementById("cpu-pc").innerHTML = _CPU.PC.toString();
+            document.getElementById("cpu-ir").innerHTML = ir;
+            document.getElementById("cpu-acc").innerHTML = _CPU.Acc.toString();
+            document.getElementById("cpu-x").innerHTML = _CPU.Xreg.toString();
+            document.getElementById("cpu-y").innerHTML = _CPU.Yreg.toString();
+            document.getElementById("cpu-z").innerHTML = _CPU.Zflag.toString();
         }
 
         //

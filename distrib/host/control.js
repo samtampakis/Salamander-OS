@@ -73,6 +73,14 @@ var TSOS;
             var input = document.getElementById("taProgramInput");
             return input.value;
         };
+        Control.displayRunningStatus = function (ir) {
+            document.getElementById("cpu-pc").innerHTML = _CPU.PC.toString();
+            document.getElementById("cpu-ir").innerHTML = ir;
+            document.getElementById("cpu-acc").innerHTML = _CPU.Acc.toString();
+            document.getElementById("cpu-x").innerHTML = _CPU.Xreg.toString();
+            document.getElementById("cpu-y").innerHTML = _CPU.Yreg.toString();
+            document.getElementById("cpu-z").innerHTML = _CPU.Zflag.toString();
+        };
         //
         // Host Events
         //
