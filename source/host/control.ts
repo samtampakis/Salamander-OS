@@ -99,20 +99,21 @@ module TSOS {
             document.getElementById("cpu-z").innerHTML = _CPU.Zflag.toString();
         
             //Memory Display
-          /*  var memoryHTML = "";
+            var memoryHTML = "";
               
-            for(var i = 0; i < 256; i ++){
+            for(var i = 0; i < (256 / 8); i ++){
                 memoryHTML += "<tr> <td>0x" + ("000" + i.toString(16)).substr(-3) + "</td>";
                 for(var j = 0; j < 8; j ++){
-                    if(typeof _CoreMemory.memory[i] == "OpCode"){
-                        memoryHTML += "<td>" + _CoreMemory.memory[i].command + "</td>";
+                    if(_CoreMemory.memory[j + i].command){
+                        console.log(_CoreMemory.memory[j + i].command );
+                        memoryHTML += "<td>" + _CoreMemory.memory[j + i].command + "</td>";
                     } else{
-                        memoryHTML += "<td>" + _CoreMemory.memory[i] + _CoreMemory.memory[i+1] + "</td>";
+                        memoryHTML += "<td>" + _CoreMemory.memory[j + i] + "</td>";
                     }
                 }
                 memoryHTML += "</tr>"
             }
-            document.getElementById("core-memory").innerHTML = memoryHTML;*/
+            document.getElementById("core-memory").innerHTML = memoryHTML;
 
             //PCB Display
             var currentPCB = _PCBArray[_RunningPID];
