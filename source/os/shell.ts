@@ -423,16 +423,15 @@ module TSOS {
                 _PCBArray[pid] = pcb;
                 
                 //load Memory in CPU
-                var retVal = new Array();
+                var tempVal = new Array();
             
-                var currentPCB = _PCBArray[pid]
                 var lookingForOpCode = true;
                 var numArgs;
             
             
-                for(var i = 0; i < (currentPCB.memoryLimits.limit - currentPCB.memoryLimits.base); i+=2){
+                for(var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base); i+=2){
                 
-                    var lookup = currentPCB.memoryLimits.data.charAt(i) + currentPCB.memoryLimits.data.charAt(i+1);
+                    var lookup = pcb.memoryLimits.data.charAt(i) + pcb.memoryLimits.data.charAt(i+1);
                     
                     if(lookingForOpCode){
                         var foundCode = false;
@@ -445,26 +444,34 @@ module TSOS {
                                if(numArgs > 0){
                                    lookingForOpCode = false;
                                }                                
-                               retVal[i] = newOpCode;
-                               retVal[i+1] = "";
+                               tempVal[i] = newOpCode;
+                               i++;
                             }
                         j++;
                         }
                         if (foundCode == false){
-                            retVal[i] = currentPCB.memoryLimits.data.charAt(i);
-                            retVal[i+1] = currentPCB.memoryLimits.data.charAt(i);
+                            tempVal[i] = pcb.memoryLimits.data.charAt(i)+ pcb.memoryLimits.data.charAt(i+1);
                         }
                     } else{
-                        retVal[i] = currentPCB.memoryLimits.data.charAt(i);
-                        retVal[i+1] = currentPCB.memoryLimits.data.charAt(i);
+                        tempVal[i] = pcb.memoryLimits.data.charAt(i) + pcb.memoryLimits.data.charAt(i+1);
                         numArgs--;
                         if(numArgs <= 0){
                             lookingForOpCode = true;
                         }  
                     }  
+                }        
+                
+                //Remove undefined elements of the array
+                
+                var retVal = new Array();
+                
+                for (var i = 0; i < tempVal.length; i++){
+                    if (tempVal[i]){
+                        retVal.push(tempVal[i]);
+                    }
                 }
            
-                currentPCB.memoryLimits.data = retVal;
+                pcb.memoryLimits.data = retVal;
                 _CoreMemory.memory = retVal
                 console.log(_CoreMemory.memory);
                 

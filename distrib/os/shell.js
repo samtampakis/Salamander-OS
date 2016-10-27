@@ -351,12 +351,11 @@ var TSOS;
                 var pcb = new TSOS.PCB("Ready", pid, new TSOS.Cpu(), _MemoryManager);
                 _PCBArray[pid] = pcb;
                 //load Memory in CPU
-                var retVal = new Array();
-                var currentPCB = _PCBArray[pid];
+                var tempVal = new Array();
                 var lookingForOpCode = true;
                 var numArgs;
-                for (var i = 0; i < (currentPCB.memoryLimits.limit - currentPCB.memoryLimits.base); i += 2) {
-                    var lookup = currentPCB.memoryLimits.data.charAt(i) + currentPCB.memoryLimits.data.charAt(i + 1);
+                for (var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base); i += 2) {
+                    var lookup = pcb.memoryLimits.data.charAt(i) + pcb.memoryLimits.data.charAt(i + 1);
                     if (lookingForOpCode) {
                         var foundCode = false;
                         var j = 0;
@@ -368,26 +367,30 @@ var TSOS;
                                 if (numArgs > 0) {
                                     lookingForOpCode = false;
                                 }
-                                retVal[i] = newOpCode;
-                                retVal[i + 1] = "";
+                                tempVal[i] = newOpCode;
+                                i++;
                             }
                             j++;
                         }
                         if (foundCode == false) {
-                            retVal[i] = currentPCB.memoryLimits.data.charAt(i);
-                            retVal[i + 1] = currentPCB.memoryLimits.data.charAt(i);
+                            tempVal[i] = pcb.memoryLimits.data.charAt(i) + pcb.memoryLimits.data.charAt(i + 1);
                         }
                     }
                     else {
-                        retVal[i] = currentPCB.memoryLimits.data.charAt(i);
-                        retVal[i + 1] = currentPCB.memoryLimits.data.charAt(i);
+                        tempVal[i] = pcb.memoryLimits.data.charAt(i) + pcb.memoryLimits.data.charAt(i + 1);
                         numArgs--;
                         if (numArgs <= 0) {
                             lookingForOpCode = true;
                         }
                     }
                 }
-                currentPCB.memoryLimits.data = retVal;
+                var retVal = new Array();
+                for (var i = 0; i < tempVal.length; i++) {
+                    if (tempVal[i]) {
+                        retVal.push(tempVal[i]);
+                    }
+                }
+                pcb.memoryLimits.data = retVal;
                 _CoreMemory.memory = retVal;
                 console.log(_CoreMemory.memory);
                 //print pid
