@@ -73,13 +73,39 @@ var TSOS;
             var input = document.getElementById("taProgramInput");
             return input.value;
         };
-        Control.displayRunningStatus = function (ir) {
+        Control.displayRunningStatus = function () {
+            //CPU display
             document.getElementById("cpu-pc").innerHTML = _CPU.PC.toString();
-            document.getElementById("cpu-ir").innerHTML = ir;
+            document.getElementById("cpu-ir").innerHTML = _CPU.IR;
             document.getElementById("cpu-acc").innerHTML = _CPU.Acc.toString();
             document.getElementById("cpu-x").innerHTML = _CPU.Xreg.toString();
             document.getElementById("cpu-y").innerHTML = _CPU.Yreg.toString();
             document.getElementById("cpu-z").innerHTML = _CPU.Zflag.toString();
+            //Memory Display
+            /*  var memoryHTML = "";
+                
+              for(var i = 0; i < 256; i ++){
+                  memoryHTML += "<tr> <td>0x" + ("000" + i.toString(16)).substr(-3) + "</td>";
+                  for(var j = 0; j < 8; j ++){
+                      if(typeof _CoreMemory.memory[i] == "OpCode"){
+                          memoryHTML += "<td>" + _CoreMemory.memory[i].command + "</td>";
+                      } else{
+                          memoryHTML += "<td>" + _CoreMemory.memory[i] + _CoreMemory.memory[i+1] + "</td>";
+                      }
+                  }
+                  memoryHTML += "</tr>"
+              }
+              document.getElementById("core-memory").innerHTML = memoryHTML;*/
+            //PCB Display
+            var currentPCB = _PCBArray[_RunningPID];
+            document.getElementById("pcb-pid").innerHTML = currentPCB.number.toString();
+            document.getElementById("pcb-pc").innerHTML = currentPCB.cpu.PC.toString();
+            document.getElementById("pcb-ir").innerHTML = currentPCB.cpu.IR;
+            document.getElementById("pcb-acc").innerHTML = currentPCB.cpu.Acc.toString();
+            document.getElementById("pcb-x").innerHTML = currentPCB.cpu.Xreg.toString();
+            document.getElementById("pcb-y").innerHTML = currentPCB.cpu.Yreg.toString();
+            document.getElementById("pcb-z").innerHTML = currentPCB.cpu.Zflag.toString();
+            document.getElementById("pcb-state").innerHTML = currentPCB.state.toString();
         };
         //
         // Host Events

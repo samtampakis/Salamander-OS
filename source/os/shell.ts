@@ -445,7 +445,6 @@ module TSOS {
                                    lookingForOpCode = false;
                                }                                
                                tempVal[i] = newOpCode;
-                               i++;
                             }
                         j++;
                         }
