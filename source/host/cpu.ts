@@ -104,34 +104,34 @@ module TSOS {
         
         //Op Code function definitions
        public loadCommand(args){
-           console.log("in loadCommand");
            if(args.length == 1){
-               console.log("branch 1");
-               console.log(parseInt(args[0], 16));
                _CPU.Acc = parseInt(args[0], 16);
            }               
            else if(args.length == 2){
-               var memLocation = args[0] + args[1];
-               _CPU.Acc = _CoreMemory.memory[parseInt(memLocation, 16)];
+               var memLocation = args[1] + args[0];
+               var memVal = _CoreMemory.memory[parseInt(memLocation, 16)]
+               _CPU.Acc = parseInt(memVal, 16);
            }
        }
        
        public storeCommand(args){
-           var memLocation = args[0] + args[1];
-           _CoreMemory.memory[parseInt(memLocation, 16)] = _CPU.Acc;
+           var memLocation = args[1] + args[0];
+           _CoreMemory.memory[parseInt(memLocation, 16)] = _CPU.Acc.toString(16);
        }
 
        public add(args){
-           var memLocation = args[0] + args[1];
-           _CPU.Acc = _CPU.Acc + _CoreMemory.memory[parseInt(memLocation, 16)];
+           var memLocation = args[1] + args[0];
+           var memVal = _CoreMemory.memory[parseInt(memLocation, 16)]
+           _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
        }
        
        public loadX(args){
            if(args.length == 1){
                _CPU.Xreg = parseInt(args[0], 16);
            } else if (args.length == 2){
-               var memLocation = args[0] + args[1];
-               _CPU.Xreg = _CoreMemory.memory[parseInt(memLocation, 16)];
+               var memLocation = args[1] + args[0];
+               var memVal = _CoreMemory.memory[parseInt(memLocation, 16)]
+               _CPU.Xreg = parseInt(memVal, 16);
            }
        }
        
@@ -139,8 +139,9 @@ module TSOS {
            if(args.length == 1){
                _CPU.Yreg = parseInt(args[0], 16);
            } else if (args.length == 2){
-               var memLocation = args[0] + args[1];
-               _CPU.Yreg = _CoreMemory.memory[parseInt(memLocation, 16)];
+               var memLocation = args[1] + args[0];
+               var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+               _CPU.Yreg = parseInt(memVal, 16);
            }
        }
        
@@ -152,7 +153,7 @@ module TSOS {
        }
        
        public compare(args){
-            var memLocation = args[0] + args[1];
+            var memLocation = args[1] + args[0];
             var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
             if(_CPU.Xreg == parseInt(memVal, 16)){
                 _CPU.Zflag = 1;
@@ -161,32 +162,39 @@ module TSOS {
        
        public branch(args){
            if(_CPU.Zflag == 0){
-                _CPU.PC = _CPU.PC + parseInt(args[0], 16) - 1;
+                _CPU.PC = _CPU.PC + parseInt(args[0], 16);
+                while(_CPU.PC > 255){
+                    _CPU.PC -= 256;
+                }
            }
        }
        
        public increment(args){
-           var memLocation = args[0] + args[1];
+           var memLocation = args[1] + args[0];
            var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
-           memVal ++;
-           _CoreMemory.memory[parseInt(memLocation, 16)] = memVal;
+           _CoreMemory.memory[parseInt(memLocation, 16)] = parseInt(memVal, 16) + 1;
        }
        
        public sysCall(args){
-           console.log("in FF");
            if(_CPU.Xreg == 1){
-               console.log("branch 1");
-               console.log(_CPU.Yreg.toString());
                _StdOut.putText(_CPU.Yreg.toString());
            } else if (_CPU.Xreg == 2){
-               var stringCode = _CPU.Yreg;
-                _StdOut.putText(String.fromCharCode(stringCode));
+               var gettingString = true;
+               var stringToPrint = "";
+               var i = _CPU.Yreg;
+               while(i < _CoreMemory.memory.length && gettingString){
+                   if (_CoreMemory.memory[i] == 0){
+                       gettingString = false;
+                   } else{
+                        stringToPrint += String.fromCharCode(parseInt(_CoreMemory.memory[i], 16));
+                        i++;
+                   }
+               }
+                _StdOut.putText(stringToPrint);
            }
        }
 
         public execute(fn, args?) {
-            _StdOut.advanceLine();
-            console.log("in execute");
             fn(args);
         }
         
@@ -198,26 +206,23 @@ module TSOS {
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             
-            console.log(_CoreMemory.memory[_CoreMemory.currentLocation]);
-            console.log(_CPU);
-            
             //Fetch
             
-            var fn = _CoreMemory.memory[_CoreMemory.currentLocation].func;
+            var fn = _CoreMemory.memory[_CPU.PC].func;
             
             //Decode
 
             var args = Array();  
-            var counter = _CoreMemory.memory[_CoreMemory.currentLocation].numArgs;
+            var counter = _CoreMemory.memory[_CPU.PC].numArgs;
             
             
             while (counter > 0){
-              _CoreMemory.currentLocation++;
-              var data = _CoreMemory.memory[_CoreMemory.currentLocation] + _CoreMemory.memory[_CoreMemory.currentLocation + 1];
+              _CPU.PC++;
+              var data = _CoreMemory.memory[_CPU.PC];
               args.push(data);             
               counter --;
             }
-            _CoreMemory.currentLocation++;
+            _CPU.PC++;
                         
             
             //Execute
@@ -231,8 +236,7 @@ module TSOS {
     
     //Temporary hosting of CoreMemory class
     export class CoreMemory {
-        constructor(public memory = [],
-                    public currentLocation = 0) {
+        constructor(public memory = []) {
         }
     }
     

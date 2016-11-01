@@ -89,41 +89,51 @@ var TSOS;
         };
         //Op Code function definitions
         Cpu.prototype.loadCommand = function (args) {
-            console.log("in loadCommand");
+            console.log(args);
             if (args.length == 1) {
-                console.log("branch 1");
                 console.log(parseInt(args[0], 16));
                 _CPU.Acc = parseInt(args[0], 16);
             }
             else if (args.length == 2) {
-                var memLocation = args[0] + args[1];
-                _CPU.Acc = _CoreMemory.memory[parseInt(memLocation, 16)];
+                var memLocation = args[1] + args[0];
+                var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+                _CPU.Acc = parseInt(memVal, 16);
             }
         };
         Cpu.prototype.storeCommand = function (args) {
-            var memLocation = args[0] + args[1];
-            _CoreMemory.memory[parseInt(memLocation, 16)] = _CPU.Acc;
+            console.log("in store command");
+            var memLocation = args[1] + args[0];
+            _CoreMemory.memory[parseInt(memLocation, 16)] = _CPU.Acc.toString(16);
         };
         Cpu.prototype.add = function (args) {
-            var memLocation = args[0] + args[1];
-            _CPU.Acc = _CPU.Acc + _CoreMemory.memory[parseInt(memLocation, 16)];
+            console.log("in add command");
+            var memLocation = args[1] + args[0];
+            var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+            _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
+            console.log(_CPU.Acc);
         };
         Cpu.prototype.loadX = function (args) {
+            console.log("in loadX command");
             if (args.length == 1) {
                 _CPU.Xreg = parseInt(args[0], 16);
             }
             else if (args.length == 2) {
-                var memLocation = args[0] + args[1];
-                _CPU.Xreg = _CoreMemory.memory[parseInt(memLocation, 16)];
+                var memLocation = args[1] + args[0];
+                var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+                _CPU.Xreg = parseInt(memVal, 16);
             }
         };
         Cpu.prototype.loadY = function (args) {
+            console.log("in loadY command");
             if (args.length == 1) {
                 _CPU.Yreg = parseInt(args[0], 16);
             }
             else if (args.length == 2) {
-                var memLocation = args[0] + args[1];
-                _CPU.Yreg = _CoreMemory.memory[parseInt(memLocation, 16)];
+                var memLocation = args[1] + args[0];
+                console.log(memLocation);
+                var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+                console.log(memVal);
+                _CPU.Yreg = parseInt(memVal, 16);
             }
         };
         Cpu.prototype.noOp = function (args) {
@@ -132,7 +142,7 @@ var TSOS;
             _CPU.isExecuting = false;
         };
         Cpu.prototype.compare = function (args) {
-            var memLocation = args[0] + args[1];
+            var memLocation = args[1] + args[0];
             var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
             if (_CPU.Xreg == parseInt(memVal, 16)) {
                 _CPU.Zflag = 1;
@@ -140,29 +150,40 @@ var TSOS;
         };
         Cpu.prototype.branch = function (args) {
             if (_CPU.Zflag == 0) {
-                _CPU.PC = _CPU.PC + parseInt(args[0], 16) - 1;
+                _CPU.PC = _CPU.PC + parseInt(args[0], 16);
+                while (_CPU.PC > 255) {
+                    _CPU.PC -= 256;
+                }
             }
         };
         Cpu.prototype.increment = function (args) {
-            var memLocation = args[0] + args[1];
+            var memLocation = args[1] + args[0];
             var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
-            memVal++;
-            _CoreMemory.memory[parseInt(memLocation, 16)] = memVal;
+            _CoreMemory.memory[parseInt(memLocation, 16)] = parseInt(memVal, 16) + 1;
+            console.log(_CoreMemory.memory[parseInt(memLocation, 16)]);
         };
         Cpu.prototype.sysCall = function (args) {
-            console.log("in FF");
+            console.log("in System Call");
             if (_CPU.Xreg == 1) {
-                console.log("branch 1");
-                console.log(_CPU.Yreg.toString());
                 _StdOut.putText(_CPU.Yreg.toString());
             }
             else if (_CPU.Xreg == 2) {
-                var stringCode = _CPU.Yreg;
-                _StdOut.putText(String.fromCharCode(stringCode));
+                var gettingString = true;
+                var stringToPrint = "";
+                var i = _CPU.Yreg;
+                while (i < _CoreMemory.memory.length && gettingString) {
+                    if (_CoreMemory.memory[i] == 0) {
+                        gettingString = false;
+                    }
+                    else {
+                        stringToPrint += String.fromCharCode(parseInt(_CoreMemory.memory[i], 16));
+                        i++;
+                    }
+                }
+                _StdOut.putText(stringToPrint);
             }
         };
         Cpu.prototype.execute = function (fn, args) {
-            _StdOut.advanceLine();
             console.log("in execute");
             fn(args);
         };
@@ -171,20 +192,20 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-            console.log(_CoreMemory.memory[_CoreMemory.currentLocation]);
+            console.log(_CoreMemory.memory[_CPU.PC]);
             console.log(_CPU);
             //Fetch
-            var fn = _CoreMemory.memory[_CoreMemory.currentLocation].func;
+            var fn = _CoreMemory.memory[_CPU.PC].func;
             //Decode
             var args = Array();
-            var counter = _CoreMemory.memory[_CoreMemory.currentLocation].numArgs;
+            var counter = _CoreMemory.memory[_CPU.PC].numArgs;
             while (counter > 0) {
-                _CoreMemory.currentLocation++;
-                var data = _CoreMemory.memory[_CoreMemory.currentLocation] + _CoreMemory.memory[_CoreMemory.currentLocation + 1];
+                _CPU.PC++;
+                var data = _CoreMemory.memory[_CPU.PC];
                 args.push(data);
                 counter--;
             }
-            _CoreMemory.currentLocation++;
+            _CPU.PC++;
             //Execute
             this.execute(fn, args);
             _PCBArray[_RunningPID].cpu = _CPU;
@@ -194,11 +215,9 @@ var TSOS;
     TSOS.Cpu = Cpu;
     //Temporary hosting of CoreMemory class
     var CoreMemory = (function () {
-        function CoreMemory(memory, currentLocation) {
+        function CoreMemory(memory) {
             if (memory === void 0) { memory = []; }
-            if (currentLocation === void 0) { currentLocation = 0; }
             this.memory = memory;
-            this.currentLocation = currentLocation;
         }
         return CoreMemory;
     }());
