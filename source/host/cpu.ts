@@ -233,18 +233,4 @@ module TSOS {
             
             //Functions for executing commands
     }
-    
-    //Temporary hosting of CoreMemory class
-    export class CoreMemory {
-        constructor(public memory = []) {
-        }
-    }
-    
-    //Temporary hosting of OpCode class
-    export class OpCode {
-        constructor(public command,
-                    public numArgs,
-                    public func) {
-        }
-    }
 }

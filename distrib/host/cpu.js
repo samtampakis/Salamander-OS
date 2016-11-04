@@ -48,50 +48,48 @@ var TSOS;
             //
             // Load the opCodes list.
             // LDA
-            uc = new OpCode("A9", 1, this.loadCommand);
+            uc = new TSOS.OpCode("A9", 1, this.loadCommand);
             _OPCodes[_OPCodes.length] = uc;
-            uc = new OpCode("AD", 2, this.loadCommand);
+            uc = new TSOS.OpCode("AD", 2, this.loadCommand);
             _OPCodes[_OPCodes.length] = uc;
             // STA
-            uc = new OpCode("8D", 2, this.storeCommand);
+            uc = new TSOS.OpCode("8D", 2, this.storeCommand);
             _OPCodes[_OPCodes.length] = uc;
             //ADC
-            uc = new OpCode("6D", 2, this.add);
+            uc = new TSOS.OpCode("6D", 2, this.add);
             _OPCodes[_OPCodes.length] = uc;
             //LDX
-            uc = new OpCode("A2", 1, this.loadX);
+            uc = new TSOS.OpCode("A2", 1, this.loadX);
             _OPCodes[_OPCodes.length] = uc;
-            uc = new OpCode("AE", 2, this.loadX);
+            uc = new TSOS.OpCode("AE", 2, this.loadX);
             _OPCodes[_OPCodes.length] = uc;
             //LDY
-            uc = new OpCode("A0", 1, this.loadY);
+            uc = new TSOS.OpCode("A0", 1, this.loadY);
             _OPCodes[_OPCodes.length] = uc;
-            uc = new OpCode("AC", 2, this.loadY);
+            uc = new TSOS.OpCode("AC", 2, this.loadY);
             _OPCodes[_OPCodes.length] = uc;
             //NOP
-            uc = new OpCode("EA", 0, this.noOp);
+            uc = new TSOS.OpCode("EA", 0, this.noOp);
             _OPCodes[_OPCodes.length] = uc;
             //BRK
-            uc = new OpCode("00", 0, this.breakCommand);
+            uc = new TSOS.OpCode("00", 0, this.breakCommand);
             _OPCodes[_OPCodes.length] = uc;
             //CPX
-            uc = new OpCode("EC", 2, this.compare);
+            uc = new TSOS.OpCode("EC", 2, this.compare);
             _OPCodes[_OPCodes.length] = uc;
             //BNE        
-            uc = new OpCode("D0", 1, this.branch);
+            uc = new TSOS.OpCode("D0", 1, this.branch);
             _OPCodes[_OPCodes.length] = uc;
             //INC
-            uc = new OpCode("EE", 2, this.increment);
+            uc = new TSOS.OpCode("EE", 2, this.increment);
             _OPCodes[_OPCodes.length] = uc;
             //SYS
-            uc = new OpCode("FF", 0, this.sysCall);
+            uc = new TSOS.OpCode("FF", 0, this.sysCall);
             _OPCodes[_OPCodes.length] = uc;
         };
         //Op Code function definitions
         Cpu.prototype.loadCommand = function (args) {
-            console.log(args);
             if (args.length == 1) {
-                console.log(parseInt(args[0], 16));
                 _CPU.Acc = parseInt(args[0], 16);
             }
             else if (args.length == 2) {
@@ -101,19 +99,15 @@ var TSOS;
             }
         };
         Cpu.prototype.storeCommand = function (args) {
-            console.log("in store command");
             var memLocation = args[1] + args[0];
             _CoreMemory.memory[parseInt(memLocation, 16)] = _CPU.Acc.toString(16);
         };
         Cpu.prototype.add = function (args) {
-            console.log("in add command");
             var memLocation = args[1] + args[0];
             var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
             _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
-            console.log(_CPU.Acc);
         };
         Cpu.prototype.loadX = function (args) {
-            console.log("in loadX command");
             if (args.length == 1) {
                 _CPU.Xreg = parseInt(args[0], 16);
             }
@@ -124,15 +118,12 @@ var TSOS;
             }
         };
         Cpu.prototype.loadY = function (args) {
-            console.log("in loadY command");
             if (args.length == 1) {
                 _CPU.Yreg = parseInt(args[0], 16);
             }
             else if (args.length == 2) {
                 var memLocation = args[1] + args[0];
-                console.log(memLocation);
                 var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
-                console.log(memVal);
                 _CPU.Yreg = parseInt(memVal, 16);
             }
         };
@@ -160,10 +151,8 @@ var TSOS;
             var memLocation = args[1] + args[0];
             var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
             _CoreMemory.memory[parseInt(memLocation, 16)] = parseInt(memVal, 16) + 1;
-            console.log(_CoreMemory.memory[parseInt(memLocation, 16)]);
         };
         Cpu.prototype.sysCall = function (args) {
-            console.log("in System Call");
             if (_CPU.Xreg == 1) {
                 _StdOut.putText(_CPU.Yreg.toString());
             }
@@ -184,7 +173,6 @@ var TSOS;
             }
         };
         Cpu.prototype.execute = function (fn, args) {
-            console.log("in execute");
             fn(args);
         };
         Cpu.prototype.cycle = function () {
@@ -192,8 +180,6 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-            console.log(_CoreMemory.memory[_CPU.PC]);
-            console.log(_CPU);
             //Fetch
             var fn = _CoreMemory.memory[_CPU.PC].func;
             //Decode
@@ -213,23 +199,4 @@ var TSOS;
         return Cpu;
     }());
     TSOS.Cpu = Cpu;
-    //Temporary hosting of CoreMemory class
-    var CoreMemory = (function () {
-        function CoreMemory(memory) {
-            if (memory === void 0) { memory = []; }
-            this.memory = memory;
-        }
-        return CoreMemory;
-    }());
-    TSOS.CoreMemory = CoreMemory;
-    //Temporary hosting of OpCode class
-    var OpCode = (function () {
-        function OpCode(command, numArgs, func) {
-            this.command = command;
-            this.numArgs = numArgs;
-            this.func = func;
-        }
-        return OpCode;
-    }());
-    TSOS.OpCode = OpCode;
 })(TSOS || (TSOS = {}));

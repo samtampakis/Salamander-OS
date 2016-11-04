@@ -101,14 +101,15 @@ module TSOS {
             //Memory Display
             var memoryHTML = "";
               
-            for(var i = 0; i < (256 / 8); i ++){
+            for(var i = 0; i < (_CoreMemory.memory.length/ 8); i ++){
                 memoryHTML += "<tr> <td>0x" + ("000" + i.toString(16)).substr(-3) + "</td>";
                 for(var j = 0; j < 8; j ++){
-                    if(_CoreMemory.memory[j + i].command){
-                        console.log(_CoreMemory.memory[j + i].command );
-                        memoryHTML += "<td>" + _CoreMemory.memory[j + i].command + "</td>";
-                    } else{
+                    if(!(typeof _CoreMemory.memory[j + i].command == "string")){
+                        console.log("not string");
                         memoryHTML += "<td>" + _CoreMemory.memory[j + i] + "</td>";
+                    } else{
+                        console.log("confirmed string");
+                        memoryHTML += "<td>" + _CoreMemory.memory[j + i].command + "</td>";
                     }
                 }
                 memoryHTML += "</tr>"
@@ -150,7 +151,6 @@ module TSOS {
 
             // Create and initialize Core Memory
             _CoreMemory = new CoreMemory();
-            //_CoreMemory.init();
             
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);

@@ -83,15 +83,16 @@ var TSOS;
             document.getElementById("cpu-z").innerHTML = _CPU.Zflag.toString();
             //Memory Display
             var memoryHTML = "";
-            for (var i = 0; i < (256 / 8); i++) {
+            for (var i = 0; i < (_CoreMemory.memory.length / 8); i++) {
                 memoryHTML += "<tr> <td>0x" + ("000" + i.toString(16)).substr(-3) + "</td>";
                 for (var j = 0; j < 8; j++) {
-                    if (_CoreMemory.memory[j + i].command) {
-                        console.log(_CoreMemory.memory[j + i].command);
-                        memoryHTML += "<td>" + _CoreMemory.memory[j + i].command + "</td>";
+                    if (!(typeof _CoreMemory.memory[j + i].command == "string")) {
+                        console.log("not string");
+                        memoryHTML += "<td>" + _CoreMemory.memory[j + i] + "</td>";
                     }
                     else {
-                        memoryHTML += "<td>" + _CoreMemory.memory[j + i] + "</td>";
+                        console.log("confirmed string");
+                        memoryHTML += "<td>" + _CoreMemory.memory[j + i].command + "</td>";
                     }
                 }
                 memoryHTML += "</tr>";
@@ -124,7 +125,6 @@ var TSOS;
             _CPU.init(); //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
             // Create and initialize Core Memory
             _CoreMemory = new TSOS.CoreMemory();
-            //_CoreMemory.init();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.

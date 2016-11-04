@@ -15,6 +15,8 @@
    <script type="text/javascript" src="distrib/host/control.js"></script>
    <script type="text/javascript" src="distrib/host/devices.js"></script>
    <script type="text/javascript" src="distrib/host/cpu.js"></script>
+   <script type="text/javascript" src="distrib/host/OpCode.js"></script>
+   <script type="text/javascript" src="distrib/host/CoreMemory.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
@@ -27,11 +29,13 @@
    <script type="text/javascript" src="distrib/os/shellCommand.js"></script>
    <script type="text/javascript" src="distrib/os/userCommand.js"></script>
    <script type="text/javascript" src="distrib/os/kernel.js"></script>
+   <script type="text/javascript" src="distrib/os/pcb.js"></script>
+   <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
 
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment this line below to enable GLaDOS testing -->
-   <!--<script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip1.js"></script> -->
+   <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip2.js"></script>
    <!-- <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script> -->
 </head>
 
@@ -134,16 +138,7 @@
       </label>
     </div>
     
-    <div id="Memory-Display">
-      <label>
-      Core Memory
-      <br>
-      <table id="core-memory" border = "1">
-      </table>
-      </label>
-    </div>
-
-   <div id="PCB-Display">
+    <div id="PCB-Display">
       <label>
       PCB Display
       <br>
@@ -168,6 +163,15 @@
             <th id="pcb-z"></th>
             <th id="pcb-state"></th>
         </tr>
+      </table>
+      </label>
+    </div>
+    
+    <div id="Memory-Display">
+      <label>
+      Core Memory
+      <br>
+      <table id="core-memory" border = "1">
       </table>
       </label>
     </div>
