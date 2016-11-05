@@ -70,6 +70,9 @@ var TSOS;
             // break
             sc = new TSOS.ShellCommand(this.shellBreak, "break", " - Self-destruct button.");
             this.commandList[this.commandList.length] = sc;
+            // clearmem
+            sc = new TSOS.ShellCommand(this.shellClearmem, "clearmem", " - Clears all memory partitions.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -415,14 +418,17 @@ var TSOS;
                     }
                 }
                 pcb.memoryLimits.data = retVal;
+                var j = 0;
                 for (var i = pcb.memoryLimits.base; i < pcb.memoryLimits.limit; i++) {
-                    if (pcb.memoryLimits.data[i]) {
-                        _CoreMemory.memory[i] = pcb.memoryLimits.data[i];
+                    if (pcb.memoryLimits.data[j]) {
+                        _CoreMemory.memory[i] = pcb.memoryLimits.data[j];
                     }
                     else {
                         _CoreMemory.memory[i] = "00";
                     }
+                    j++;
                 }
+                console.log(pcb.memoryLimits.data);
                 console.log(_CoreMemory.memory);
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
@@ -454,6 +460,10 @@ var TSOS;
             _StdOut.resetXY();
             var error = new TSOS.Interrupt(ERROR_IRQ, "");
             _KernelInterruptQueue.enqueue(error);
+        };
+        Shell.prototype.shellClearmem = function () {
+            _CoreMemory.clearMemory();
+            console.log(_CoreMemory.memory);
         };
         return Shell;
     }());

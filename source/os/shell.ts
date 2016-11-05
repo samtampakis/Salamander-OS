@@ -122,6 +122,12 @@ module TSOS {
                                   " - Self-destruct button.");
             this.commandList[this.commandList.length] = sc;
 
+            // clearmem
+            sc = new ShellCommand(this.shellClearmem,
+                                  "clearmem",
+                                  " - Clears all memory partitions.");
+            this.commandList[this.commandList.length] = sc;
+
             
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -493,14 +499,15 @@ module TSOS {
 
                 pcb.memoryLimits.data = retVal;
               
+                var j = 0;
                 for(var i = pcb.memoryLimits.base; i < pcb.memoryLimits.limit; i++){
-                    if(pcb.memoryLimits.data[i]){
-                        _CoreMemory.memory[i] = pcb.memoryLimits.data[i];
+                    if(pcb.memoryLimits.data[j]){
+                        _CoreMemory.memory[i] = pcb.memoryLimits.data[j];
                     } else {
                         _CoreMemory.memory[i] = "00";
                     }
+                    j++;
                 }
-                console.log(_CoreMemory.memory);
                 
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
@@ -534,6 +541,10 @@ module TSOS {
             _StdOut.resetXY();
             var error = new Interrupt(ERROR_IRQ, "");
             _KernelInterruptQueue.enqueue(error);
+        }
+        
+        public shellClearmem(){
+            _CoreMemory.clearMemory();
         }
         
     }
