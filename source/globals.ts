@@ -56,7 +56,8 @@ var _InputHistory: any[] = null;  // Keep track of user inputs
 var _OPCodes: any[] = null;
 
 var _MemoryManager: TSOS.MemoryManager;
-var _PCBArray: any[] = null;
+var _ResidentQueue: any[] = null;
+var _RunningQueue: any[] = null;
 var _PID: number = 0;
 var _RunningPID: number;
 

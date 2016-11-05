@@ -194,7 +194,7 @@ var TSOS;
             _CPU.PC++;
             //Execute
             this.execute(fn, args);
-            _PCBArray[_RunningPID].cpu = _CPU;
+            _RunningQueue[_RunningPID].cpu = _CPU;
         };
         return Cpu;
     }());

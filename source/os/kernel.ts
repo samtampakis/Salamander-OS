@@ -44,10 +44,12 @@ module TSOS {
             this.krnTrace(_krnKeyboardDriver.status);
 
             //Initialize memory manager
-            _MemoryManager = new MemoryManager(0,255, null);
+            _MemoryManager = new MemoryManager(true, true, true);
             
-            //Initialize PCB Array
-            _PCBArray = new Array();
+            //Initialize PCB Queues
+            _ResidentQueue = new Array();
+            _RunningQueue = new Array();
+            
             
             //
             // ... more?

@@ -40,7 +40,8 @@ var _KernelBuffers = null; // when clearly 'any' is not what we want. There is l
 var _InputHistory = null; // Keep track of user inputs
 var _OPCodes = null;
 var _MemoryManager;
-var _PCBArray = null;
+var _ResidentQueue = null;
+var _RunningQueue = null;
 var _PID = 0;
 var _RunningPID;
 // Standard input and output
