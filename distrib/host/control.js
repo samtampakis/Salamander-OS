@@ -83,23 +83,22 @@ var TSOS;
             document.getElementById("cpu-z").innerHTML = _CPU.Zflag.toString();
             //Memory Display
             var memoryHTML = "";
-            for (var i = 0; i < (_CoreMemory.memory.length / 8); i++) {
-                memoryHTML += "<tr> <td>0x" + ("000" + i.toString(16)).substr(-3) + "</td>";
-                for (var j = 0; j < 8; j++) {
-                    if (!(typeof _CoreMemory.memory[j + i].command == "string")) {
-                        console.log("not string");
-                        memoryHTML += "<td>" + _CoreMemory.memory[j + i] + "</td>";
-                    }
-                    else {
-                        console.log("confirmed string");
-                        memoryHTML += "<td>" + _CoreMemory.memory[j + i].command + "</td>";
-                    }
-                }
-                memoryHTML += "</tr>";
-            }
-            document.getElementById("core-memory").innerHTML = memoryHTML;
+            /* for(var p = 0; p < 3; p++){
+             for(var i = 0; i < 256; i ++){
+                 memoryHTML += "<tr> <td>" + p + "x" + ("000" + i.toString(16)).substr(-3) + "</td>";
+                 for(var j = 0; j < 8; j ++){
+                     if(!(typeof _CoreMemory.memory[(p*256) + j + i].command == "string")){
+                         memoryHTML += "<td>" + _CoreMemory.memory[j + i] + "</td>";
+                     } else{
+                         memoryHTML += "<td>" + _CoreMemory.memory[j + i].command + "</td>";
+                     }
+                 }
+                 memoryHTML += "</tr>"
+             }
+             }
+             document.getElementById("core-memory").innerHTML = memoryHTML;*/
             //PCB Display
-            var currentPCB = _PCBArray[_RunningPID];
+            var currentPCB = _RunningQueue[_RunningPID];
             document.getElementById("pcb-pid").innerHTML = currentPCB.number.toString();
             document.getElementById("pcb-pc").innerHTML = currentPCB.cpu.PC.toString();
             document.getElementById("pcb-ir").innerHTML = currentPCB.cpu.IR;
@@ -125,6 +124,7 @@ var TSOS;
             _CPU.init(); //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
             // Create and initialize Core Memory
             _CoreMemory = new TSOS.CoreMemory();
+            _CoreMemory.clearMemory();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
