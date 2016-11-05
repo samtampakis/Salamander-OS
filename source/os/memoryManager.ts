@@ -1,8 +1,8 @@
 module TSOS {
         export class MemoryManager {
-        constructor(public base: number,
-                    public limit: number,
-                    public data: string = null) {
+        constructor(public firstPartitionAvailable: boolean = true,
+                    public secondPartitionAvailable: boolean = true,
+                    public thirdPartitionAvailable: boolean = true,) {
         }
     }
 }

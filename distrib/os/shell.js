@@ -343,19 +343,43 @@ var TSOS;
                 i++;
             }
             if (isValid) {
-                _MemoryManager.data = input;
+                var memoryIsAvailable = true;
+                //Determine which Memory Partition to load into
+                var pcbMem;
+                if (_MemoryManager.firstPartitionAvailable) {
+                    pcbMem = new TSOS.ProcessMemory(0, 256, null);
+                    _MemoryManager.firstPartitionAvailable = false;
+                }
+                else if (_MemoryManager.secondPartitionAvailable) {
+                    pcbMem = new TSOS.ProcessMemory(256, 512, null);
+                    _MemoryManager.secondPartitionAvailable = false;
+                }
+                else if (_MemoryManager.thirdPartitionAvailable) {
+                    pcbMem = new TSOS.ProcessMemory(512, 768, null);
+                    _MemoryManager.thirdPartitionAvailable = false;
+                }
+                else {
+                    //If all memory partitions are full, send an error message to the user
+                    _StdOut.putText("Memory is full. Please clear memory and try again.");
+                    memoryIsAvailable = false;
+                }
+            }
+            else {
+                _StdOut.putText("Invalid input. Please review and try again.");
+            }
+            if (memoryIsAvailable) {
                 //set pid
                 var pid = _PID;
                 _PID++;
-                //create PCB and add it to global array
-                var pcb = new TSOS.PCB("Ready", pid, new TSOS.Cpu(), _MemoryManager);
-                _PCBArray[pid] = pcb;
+                //create PCB and add it to global array   
+                var pcb = new TSOS.PCB("Ready", pid, new TSOS.Cpu(), pcbMem);
+                _ResidentQueue[pid] = pcb;
                 //load Memory in CPU
                 var tempVal = new Array();
                 var lookingForOpCode = true;
                 var numArgs;
                 for (var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base); i += 2) {
-                    var lookup = pcb.memoryLimits.data.charAt(i) + pcb.memoryLimits.data.charAt(i + 1);
+                    var lookup = input.charAt(i) + input.charAt(i + 1);
                     if (lookingForOpCode) {
                         var foundCode = false;
                         var j = 0;
@@ -368,22 +392,22 @@ var TSOS;
                                     lookingForOpCode = false;
                                 }
                                 tempVal[i] = newOpCode;
-                                i++;
                             }
                             j++;
                         }
                         if (foundCode == false) {
-                            tempVal[i] = pcb.memoryLimits.data.charAt(i) + pcb.memoryLimits.data.charAt(i + 1);
+                            tempVal[i] = input.charAt(i) + input.charAt(i + 1);
                         }
                     }
                     else {
-                        tempVal[i] = pcb.memoryLimits.data.charAt(i) + pcb.memoryLimits.data.charAt(i + 1);
+                        tempVal[i] = input.charAt(i) + input.charAt(i + 1);
                         numArgs--;
                         if (numArgs <= 0) {
                             lookingForOpCode = true;
                         }
                     }
                 }
+                //Remove undefined elements of the array
                 var retVal = new Array();
                 for (var i = 0; i < tempVal.length; i++) {
                     if (tempVal[i]) {
@@ -391,13 +415,17 @@ var TSOS;
                     }
                 }
                 pcb.memoryLimits.data = retVal;
-                _CoreMemory.memory = retVal;
+                for (var i = pcb.memoryLimits.base; i < pcb.memoryLimits.limit; i++) {
+                    if (pcb.memoryLimits.data[i]) {
+                        _CoreMemory.memory[i] = pcb.memoryLimits.data[i];
+                    }
+                    else {
+                        _CoreMemory.memory[i] = "00";
+                    }
+                }
                 console.log(_CoreMemory.memory);
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
-            }
-            else {
-                _StdOut.putText("Invalid input. Please review and try again.");
             }
         };
         Shell.prototype.shellRun = function (args) {

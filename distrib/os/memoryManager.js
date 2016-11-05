@@ -1,11 +1,13 @@
 var TSOS;
 (function (TSOS) {
     var MemoryManager = (function () {
-        function MemoryManager(base, limit, data) {
-            if (data === void 0) { data = null; }
-            this.base = base;
-            this.limit = limit;
-            this.data = data;
+        function MemoryManager(firstPartitionAvailable, secondPartitionAvailable, thirdPartitionAvailable) {
+            if (firstPartitionAvailable === void 0) { firstPartitionAvailable = true; }
+            if (secondPartitionAvailable === void 0) { secondPartitionAvailable = true; }
+            if (thirdPartitionAvailable === void 0) { thirdPartitionAvailable = true; }
+            this.firstPartitionAvailable = firstPartitionAvailable;
+            this.secondPartitionAvailable = secondPartitionAvailable;
+            this.thirdPartitionAvailable = thirdPartitionAvailable;
         }
         return MemoryManager;
     }());
