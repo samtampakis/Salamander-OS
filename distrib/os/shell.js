@@ -428,8 +428,6 @@ var TSOS;
                     }
                     j++;
                 }
-                console.log(pcb.memoryLimits.data);
-                console.log(_CoreMemory.memory);
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
             }
@@ -437,6 +435,7 @@ var TSOS;
         Shell.prototype.shellRun = function (args) {
             if (args.length > 0) {
                 _RunningPID = args;
+                _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
                 _CPU.isExecuting = true;
             }
             else {
@@ -463,7 +462,9 @@ var TSOS;
         };
         Shell.prototype.shellClearmem = function () {
             _CoreMemory.clearMemory();
-            console.log(_CoreMemory.memory);
+            _MemoryManager.firstPartitionAvailable = true;
+            _MemoryManager.secondPartitionAvailable = true;
+            _MemoryManager.thirdPartitionAvailable = true;
         };
         return Shell;
     }());

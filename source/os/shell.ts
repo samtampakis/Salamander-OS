@@ -518,6 +518,7 @@ module TSOS {
         public shellRun(args){
             if (args.length > 0){
                 _RunningPID = args;
+                _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
                 _CPU.isExecuting = true;
             } else {
                 _StdOut.putText("Usage: run <pid>  Please supply a pid.");
@@ -545,6 +546,9 @@ module TSOS {
         
         public shellClearmem(){
             _CoreMemory.clearMemory();
+            _MemoryManager.firstPartitionAvailable = true;
+            _MemoryManager.secondPartitionAvailable = true;
+            _MemoryManager.thirdPartitionAvailable = true;
         }
         
     }
