@@ -108,20 +108,23 @@ module TSOS {
                _CPU.Acc = parseInt(args[0], 16);
            }               
            else if(args.length == 2){
+               var currentPCB = _RunningQueue[_RunningPID];
                var memLocation = args[1] + args[0];
-               var memVal = _CoreMemory.memory[parseInt(memLocation, 16)]
+               var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
                _CPU.Acc = parseInt(memVal, 16);
            }
        }
        
        public storeCommand(args){
+           var currentPCB = _RunningQueue[_RunningPID];
            var memLocation = args[1] + args[0];
-           _CoreMemory.memory[parseInt(memLocation, 16)] = _CPU.Acc.toString(16);
+           _CoreMemory.memory[parseInt(memLocation, 16)  + currentPCB.memoryLimits.base] = _CPU.Acc.toString(16);
        }
 
        public add(args){
+           var currentPCB = _RunningQueue[_RunningPID];
            var memLocation = args[1] + args[0];
-           var memVal = _CoreMemory.memory[parseInt(memLocation, 16)]
+           var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
            _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
        }
        
@@ -129,8 +132,9 @@ module TSOS {
            if(args.length == 1){
                _CPU.Xreg = parseInt(args[0], 16);
            } else if (args.length == 2){
+               var currentPCB = _RunningQueue[_RunningPID];
                var memLocation = args[1] + args[0];
-               var memVal = _CoreMemory.memory[parseInt(memLocation, 16)]
+               var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
                _CPU.Xreg = parseInt(memVal, 16);
            }
        }
@@ -139,8 +143,9 @@ module TSOS {
            if(args.length == 1){
                _CPU.Yreg = parseInt(args[0], 16);
            } else if (args.length == 2){
+               var currentPCB = _RunningQueue[_RunningPID];
                var memLocation = args[1] + args[0];
-               var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+               var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
                _CPU.Yreg = parseInt(memVal, 16);
            }
        }
@@ -153,8 +158,9 @@ module TSOS {
        }
        
        public compare(args){
+            var currentPCB = _RunningQueue[_RunningPID];
             var memLocation = args[1] + args[0];
-            var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
+            var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
             if(_CPU.Xreg == parseInt(memVal, 16)){
                 _CPU.Zflag = 1;
             }
@@ -170,19 +176,21 @@ module TSOS {
        }
        
        public increment(args){
+           var currentPCB = _RunningQueue[_RunningPID];
            var memLocation = args[1] + args[0];
-           var memVal = _CoreMemory.memory[parseInt(memLocation, 16)];
-           _CoreMemory.memory[parseInt(memLocation, 16)] = parseInt(memVal, 16) + 1;
+           var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+           _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base] = parseInt(memVal, 16) + 1;
        }
        
        public sysCall(args){
            if(_CPU.Xreg == 1){
                _StdOut.putText(_CPU.Yreg.toString());
            } else if (_CPU.Xreg == 2){
+               var currentPCB = _RunningQueue[_RunningPID];
                var gettingString = true;
                var stringToPrint = "";
-               var i = _CPU.Yreg;
-               while(i < _CoreMemory.memory.length && gettingString){
+               var i = _CPU.Yreg + currentPCB.memoryLimits.base;
+               while(i < currentPCB.memoryLimits.limit && gettingString){
                    if (_CoreMemory.memory[i] == 0){
                        gettingString = false;
                    } else{
@@ -206,19 +214,22 @@ module TSOS {
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             
-            //Fetch
             
-            var fn = _CoreMemory.memory[_CPU.PC].func;
+            //Fetch
+            var currentPCB = _RunningQueue[_RunningPID];
+            var memoryAccess = _CPU.PC + currentPCB.memoryLimits.base;
+            var fn = _CoreMemory.memory[memoryAccess].func;
             
             //Decode
 
             var args = Array();  
-            var counter = _CoreMemory.memory[_CPU.PC].numArgs;
+            var counter = _CoreMemory.memory[memoryAccess].numArgs;
             
             
             while (counter > 0){
               _CPU.PC++;
-              var data = _CoreMemory.memory[_CPU.PC];
+              memoryAccess++;
+              var data = _CoreMemory.memory[memoryAccess];
               args.push(data);             
               counter --;
             }
