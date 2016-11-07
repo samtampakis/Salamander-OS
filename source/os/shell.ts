@@ -136,8 +136,15 @@ module TSOS {
 
             
             // ps  - list the running processes and their IDs
+            
+            
             // kill <id> - kills the specified process id.
-
+            sc = new ShellCommand(this.shellKill,
+                                  "kill",
+                                  "<pid> - Kills specified process.");
+            this.commandList[this.commandList.length] = sc;
+            
+            
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -565,6 +572,16 @@ module TSOS {
                 _StdOut.putText("Usage: quantum <int>  Please supply an integer.");
             } else {
                 _Quantum = newQuantum;
+            }
+        }
+        
+        public shellKill(args){
+            var pid = parseInt(args)
+            if(isNaN(pid)){
+                _StdOut.putText("Usage: kill <pid>  Please supply a PID.");
+            } else {
+                _RunningQueue[_RunningPID].state = "Terminated";
+                _CPU.isExecuting = false;
             }
         }
     }

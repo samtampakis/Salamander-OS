@@ -78,6 +78,8 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
+            sc = new TSOS.ShellCommand(this.shellKill, "kill", "<pid> - Kills specified process.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -477,6 +479,16 @@ var TSOS;
             }
             else {
                 _Quantum = newQuantum;
+            }
+        };
+        Shell.prototype.shellKill = function (args) {
+            var pid = parseInt(args);
+            if (isNaN(pid)) {
+                _StdOut.putText("Usage: kill <pid>  Please supply a PID.");
+            }
+            else {
+                _RunningQueue[_RunningPID].state = "Terminated";
+                _CPU.isExecuting = false;
             }
         };
         return Shell;
