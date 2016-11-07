@@ -117,18 +117,28 @@ module TSOS {
             document.getElementById("core-memory").innerHTML = memoryHTML;*/
 
             //PCB Display
-            var currentPCB = _RunningQueue[_RunningPID];
+            var tableHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
+            tableHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th></tr>";
             
-            document.getElementById("pcb-pid").innerHTML = currentPCB.number.toString();
-            document.getElementById("pcb-pc").innerHTML = currentPCB.cpu.PC.toString();
-            document.getElementById("pcb-ir").innerHTML = currentPCB.cpu.IR;
-            document.getElementById("pcb-acc").innerHTML = currentPCB.cpu.Acc.toString();
-            document.getElementById("pcb-x").innerHTML = currentPCB.cpu.Xreg.toString();
-            document.getElementById("pcb-y").innerHTML = currentPCB.cpu.Yreg.toString();
-            document.getElementById("pcb-z").innerHTML = currentPCB.cpu.Zflag.toString();
-            document.getElementById("pcb-state").innerHTML = currentPCB.state.toString();
-        
-        
+            for(var i = 0; i < _ResidentQueue.length; i++){
+            
+                if(_ResidentQueue[i]){
+                    var currentPCB = _ResidentQueue[i];
+                    tableHtml += "<tr>";
+                    tableHtml += "<th>" + currentPCB.number.toString() + "</th>";
+                    tableHtml += "<th>" + currentPCB.cpu.PC.toString() + "</th>";
+                    tableHtml += "<th>" + currentPCB.cpu.IR + "</th>";
+                    tableHtml += "<th>" + currentPCB.cpu.Acc.toString() + "</th>";
+                    tableHtml += "<th>" + currentPCB.cpu.Xreg.toString() + "</th>";
+                    tableHtml += "<th>" + currentPCB.cpu.Yreg.toString() + "</th>";
+                    tableHtml += "<th>" + currentPCB.cpu.Zflag.toString() + "</th>";
+                    tableHtml += "<th>" + currentPCB.state.toString() + "</th>";
+                    tableHtml += "</tr>";
+                }
+            }
+            
+            document.getElementById("ResidentQueue-Display").innerHTML = tableHtml;
+            
         }
 
         //

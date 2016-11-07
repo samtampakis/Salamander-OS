@@ -136,6 +136,7 @@ var TSOS;
         };
         Cpu.prototype.breakCommand = function (args) {
             _CPU.isExecuting = false;
+            _RunningQueue[_RunningPID].state = "Terminated";
         };
         Cpu.prototype.compare = function (args) {
             var currentPCB = _RunningQueue[_RunningPID];
@@ -184,7 +185,6 @@ var TSOS;
             fn(args);
         };
         Cpu.prototype.cycle = function () {
-            TSOS.Control.displayRunningStatus();
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
@@ -192,6 +192,7 @@ var TSOS;
             var currentPCB = _RunningQueue[_RunningPID];
             var memoryAccess = _CPU.PC + currentPCB.memoryLimits.base;
             var fn = _CoreMemory.memory[memoryAccess].func;
+            _CPU.IR = _CoreMemory.memory[memoryAccess].command;
             //Decode
             var args = Array();
             var counter = _CoreMemory.memory[memoryAccess].numArgs;

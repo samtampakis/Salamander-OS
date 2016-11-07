@@ -155,6 +155,7 @@ module TSOS {
        
        public breakCommand(args){
             _CPU.isExecuting = false;
+            _RunningQueue[_RunningPID].state = "Terminated";
        }
        
        public compare(args){
@@ -209,7 +210,6 @@ module TSOS {
 
 
         public cycle(): void {
-            Control.displayRunningStatus();
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
@@ -219,6 +219,7 @@ module TSOS {
             var currentPCB = _RunningQueue[_RunningPID];
             var memoryAccess = _CPU.PC + currentPCB.memoryLimits.base;
             var fn = _CoreMemory.memory[memoryAccess].func;
+            _CPU.IR = _CoreMemory.memory[memoryAccess].command;
             
             //Decode
 

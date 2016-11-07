@@ -31,11 +31,13 @@
    <script type="text/javascript" src="distrib/os/kernel.js"></script>
    <script type="text/javascript" src="distrib/os/pcb.js"></script>
    <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
+   <script type="text/javascript" src="distrib/os/processMemory.js"></script>
+   <script type="text/javascript" src="distrib/os/scheduler.js"></script>
 
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment this line below to enable GLaDOS testing -->
-   <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip2.js"></script>
+   <!--<script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip2.js"></script>-->
    <!-- <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script> -->
 </head>
 
@@ -138,21 +140,12 @@
       </label>
     </div>
     
-    <div id="PCB-Display">
+    <div>
       <label>
-      PCB Display
+      Resident Queue Display
       <br>
-      <table border="1">
-        <tr>
-            <th>PID</th>
-            <th>PC</th>
-            <th>IR</th>
-            <th>ACC</th>
-            <th>X</th>
-            <th>Y</th>
-            <th>Z</th>
-            <th>State</th>
-        </tr>
+      <table  id="ResidentQueue-Display" border="1">
+
         <tr>
             <th id="pcb-pid"></th>
             <th id="pcb-pc"></th>
