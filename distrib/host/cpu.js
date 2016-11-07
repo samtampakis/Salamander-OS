@@ -143,7 +143,8 @@ var TSOS;
         Cpu.prototype.noOp = function (args) {
         };
         Cpu.prototype.breakCommand = function (args) {
-            _RunningQueue[_RunningPID].state = "Terminated";
+            _ResidentQueue[_RunningPID].state = "Terminated";
+            _RunningQueue[_RunningPID] = null;
             _CPU.resetCpu();
         };
         Cpu.prototype.compare = function (args) {

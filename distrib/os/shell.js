@@ -487,7 +487,8 @@ var TSOS;
                 _StdOut.putText("Usage: kill <pid>  Please supply a PID.");
             }
             else {
-                _RunningQueue[_RunningPID].state = "Terminated";
+                _ResidentQueue[_RunningPID].state = "Terminated";
+                _RunningQueue[_RunningPID] = null;
                 _CPU.isExecuting = false;
             }
         };

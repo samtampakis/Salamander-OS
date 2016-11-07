@@ -98,24 +98,42 @@ var TSOS;
              }
              document.getElementById("core-memory").innerHTML = memoryHTML;*/
             //PCB Display
-            var tableHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
-            tableHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th></tr>";
+            var runningHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
+            runningHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th></tr>";
+            for (var i = 0; i < _RunningQueue.length; i++) {
+                if (_RunningQueue[i]) {
+                    var currentPCB = _RunningQueue[i];
+                    runningHtml += "<tr>";
+                    runningHtml += "<th>" + currentPCB.number.toString() + "</th>";
+                    runningHtml += "<th>" + currentPCB.cpu.PC.toString() + "</th>";
+                    runningHtml += "<th>" + currentPCB.cpu.IR + "</th>";
+                    runningHtml += "<th>" + currentPCB.cpu.Acc.toString() + "</th>";
+                    runningHtml += "<th>" + currentPCB.cpu.Xreg.toString() + "</th>";
+                    runningHtml += "<th>" + currentPCB.cpu.Yreg.toString() + "</th>";
+                    runningHtml += "<th>" + currentPCB.cpu.Zflag.toString() + "</th>";
+                    runningHtml += "<th>" + currentPCB.state.toString() + "</th>";
+                    runningHtml += "</tr>";
+                }
+            }
+            document.getElementById("RunningQueue-Display").innerHTML = runningHtml;
+            var residentHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
+            residentHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th></tr>";
             for (var i = 0; i < _ResidentQueue.length; i++) {
                 if (_ResidentQueue[i]) {
                     var currentPCB = _ResidentQueue[i];
-                    tableHtml += "<tr>";
-                    tableHtml += "<th>" + currentPCB.number.toString() + "</th>";
-                    tableHtml += "<th>" + currentPCB.cpu.PC.toString() + "</th>";
-                    tableHtml += "<th>" + currentPCB.cpu.IR + "</th>";
-                    tableHtml += "<th>" + currentPCB.cpu.Acc.toString() + "</th>";
-                    tableHtml += "<th>" + currentPCB.cpu.Xreg.toString() + "</th>";
-                    tableHtml += "<th>" + currentPCB.cpu.Yreg.toString() + "</th>";
-                    tableHtml += "<th>" + currentPCB.cpu.Zflag.toString() + "</th>";
-                    tableHtml += "<th>" + currentPCB.state.toString() + "</th>";
-                    tableHtml += "</tr>";
+                    residentHtml += "<tr>";
+                    residentHtml += "<th>" + currentPCB.number.toString() + "</th>";
+                    residentHtml += "<th>" + currentPCB.cpu.PC.toString() + "</th>";
+                    residentHtml += "<th>" + currentPCB.cpu.IR + "</th>";
+                    residentHtml += "<th>" + currentPCB.cpu.Acc.toString() + "</th>";
+                    residentHtml += "<th>" + currentPCB.cpu.Xreg.toString() + "</th>";
+                    residentHtml += "<th>" + currentPCB.cpu.Yreg.toString() + "</th>";
+                    residentHtml += "<th>" + currentPCB.cpu.Zflag.toString() + "</th>";
+                    residentHtml += "<th>" + currentPCB.state.toString() + "</th>";
+                    residentHtml += "</tr>";
                 }
             }
-            document.getElementById("ResidentQueue-Display").innerHTML = tableHtml;
+            document.getElementById("ResidentQueue-Display").innerHTML = residentHtml;
         };
         //
         // Host Events
