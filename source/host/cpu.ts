@@ -166,6 +166,22 @@ module TSOS {
             _ResidentQueue[_RunningPID].state = "Terminated";
             _RunningQueue[_RunningPID] = null;
             _CPU.resetCpu();
+            var partition = _ResidentQueue[_RunningPID].memoryLimits.base;
+            
+            switch(partition){
+                case 0:
+                    _CoreMemory.clearFirstPartition;
+                    _MemoryManager.firstPartitionAvailable = true;
+                    break;
+                case 256:
+                    _CoreMemory.clearSecondPartition;
+                    _MemoryManager.secondPartitionAvailable = true;
+                    break;                
+                case 512:
+                    _CoreMemory.clearThirdPartition;
+                    _MemoryManager.thirdPartitionAvailable = true;
+                    break;    
+            }                    
        }
        
        public compare(args){
