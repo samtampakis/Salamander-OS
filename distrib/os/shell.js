@@ -438,6 +438,7 @@ var TSOS;
         Shell.prototype.shellRun = function (args) {
             if (args.length > 0) {
                 _RunningPID = args;
+                _ResidentQueue[_RunningPID].state = "Running";
                 _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
                 _CPU.isExecuting = true;
             }

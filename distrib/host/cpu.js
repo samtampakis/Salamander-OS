@@ -87,6 +87,14 @@ var TSOS;
             uc = new TSOS.OpCode("FF", 0, this.sysCall);
             _OPCodes[_OPCodes.length] = uc;
         };
+        Cpu.prototype.resetCpu = function () {
+            _CPU.PC = 0;
+            _CPU.Acc = 0;
+            _CPU.Xreg = 0;
+            _CPU.Yreg = 0;
+            _CPU.Zflag = 0;
+            _CPU.isExecuting = false;
+        };
         //Op Code function definitions
         Cpu.prototype.loadCommand = function (args) {
             if (args.length == 1) {
@@ -135,8 +143,8 @@ var TSOS;
         Cpu.prototype.noOp = function (args) {
         };
         Cpu.prototype.breakCommand = function (args) {
-            _CPU.isExecuting = false;
             _RunningQueue[_RunningPID].state = "Terminated";
+            _CPU.resetCpu();
         };
         Cpu.prototype.compare = function (args) {
             var currentPCB = _RunningQueue[_RunningPID];

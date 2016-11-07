@@ -524,7 +524,9 @@ module TSOS {
         public shellRun(args){
             if (args.length > 0){
                 _RunningPID = args;
+                _ResidentQueue[_RunningPID].state = "Running";
                 _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
+
                 _CPU.isExecuting = true;
             } else {
                 _StdOut.putText("Usage: run <pid>  Please supply a pid.");

@@ -102,6 +102,15 @@ module TSOS {
             _OPCodes[_OPCodes.length] = uc;
         }
         
+        public resetCpu(){
+            _CPU.PC = 0;
+            _CPU.Acc = 0;
+            _CPU.Xreg = 0;
+            _CPU.Yreg = 0;
+            _CPU.Zflag = 0;
+            _CPU.isExecuting = false;
+        }
+        
         //Op Code function definitions
        public loadCommand(args){
            if(args.length == 1){
@@ -154,8 +163,8 @@ module TSOS {
        }
        
        public breakCommand(args){
-            _CPU.isExecuting = false;
             _RunningQueue[_RunningPID].state = "Terminated";
+            _CPU.resetCpu();
        }
        
        public compare(args){
@@ -239,10 +248,9 @@ module TSOS {
             
             //Execute
             this.execute(fn, args);
+
             _RunningQueue[_RunningPID].cpu = _CPU;
             
-            }
-            
-            //Functions for executing commands
+        }
     }
 }
