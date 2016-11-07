@@ -73,6 +73,9 @@ var TSOS;
             // clearmem
             sc = new TSOS.ShellCommand(this.shellClearmem, "clearmem", " - Clears all memory partitions.");
             this.commandList[this.commandList.length] = sc;
+            // quantum <int>
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<int> - Set Round Robin quantum.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -465,6 +468,15 @@ var TSOS;
             _MemoryManager.firstPartitionAvailable = true;
             _MemoryManager.secondPartitionAvailable = true;
             _MemoryManager.thirdPartitionAvailable = true;
+        };
+        Shell.prototype.shellQuantum = function (args) {
+            var newQuantum = parseInt(args);
+            if (isNaN(newQuantum)) {
+                _StdOut.putText("Usage: quantum <int>  Please supply an integer.");
+            }
+            else {
+                _Quantum = newQuantum;
+            }
         };
         return Shell;
     }());

@@ -61,6 +61,9 @@ var _RunningQueue: any[] = null;
 var _PID: number = 0;
 var _RunningPID: number;
 
+var _Scheduler: TSOS.Scheduler;
+var _Quantum: number;
+
 // Standard input and output
 var _StdIn;    // Same "to null or not to null" issue as above.
 var _StdOut;

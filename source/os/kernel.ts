@@ -50,6 +50,9 @@ module TSOS {
             _ResidentQueue = new Array();
             _RunningQueue = new Array();
             
+            //Initiallize Scheduler
+            _Scheduler = new Scheduler();
+            _Quantum = 6;
             
             //
             // ... more?

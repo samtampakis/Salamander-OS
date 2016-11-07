@@ -127,6 +127,12 @@ module TSOS {
                                   "clearmem",
                                   " - Clears all memory partitions.");
             this.commandList[this.commandList.length] = sc;
+            
+            // quantum <int>
+            sc = new ShellCommand(this.shellQuantum,
+                                  "quantum",
+                                  "<int> - Set Round Robin quantum.");
+            this.commandList[this.commandList.length] = sc;
 
             
             // ps  - list the running processes and their IDs
@@ -551,6 +557,14 @@ module TSOS {
             _MemoryManager.thirdPartitionAvailable = true;
         }
         
+        public shellQuantum(args){
+            var newQuantum = parseInt(args);
+            if (isNaN(newQuantum)){
+                _StdOut.putText("Usage: quantum <int>  Please supply an integer.");
+            } else {
+                _Quantum = newQuantum;
+            }
+        }
     }
 }
  

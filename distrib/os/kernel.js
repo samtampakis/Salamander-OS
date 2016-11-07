@@ -38,9 +38,13 @@ var TSOS;
             _krnKeyboardDriver.driverEntry(); // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
             //Initialize memory manager
-            _MemoryManager = new TSOS.MemoryManager(0, 255, null);
-            //Initialize PCB Array
-            _PCBArray = new Array();
+            _MemoryManager = new TSOS.MemoryManager(true, true, true);
+            //Initialize PCB Queues
+            _ResidentQueue = new Array();
+            _RunningQueue = new Array();
+            //Initiallize Scheduler
+            _Scheduler = new TSOS.Scheduler();
+            _Quantum = 6;
             //
             // ... more?
             //

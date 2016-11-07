@@ -44,6 +44,8 @@ var _ResidentQueue = null;
 var _RunningQueue = null;
 var _PID = 0;
 var _RunningPID;
+var _Scheduler;
+var _Quantum;
 // Standard input and output
 var _StdIn; // Same "to null or not to null" issue as above.
 var _StdOut;
