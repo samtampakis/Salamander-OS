@@ -76,6 +76,9 @@ var TSOS;
             // quantum <int>
             sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<int> - Set Round Robin quantum.");
             this.commandList[this.commandList.length] = sc;
+            //runall
+            sc = new TSOS.ShellCommand(this.shellRunall, "runall", " - Run all programs currently stored in memory.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             sc = new TSOS.ShellCommand(this.shellPS, "ps", " - List the running processes and their IDs.");
             this.commandList[this.commandList.length] = sc;
@@ -483,6 +486,17 @@ var TSOS;
                 _Quantum = newQuantum;
             }
         };
+        Shell.prototype.shellRunall = function () {
+            for (var i = 0; i < _ResidentQueue.length; i++) {
+                if (_ResidentQueue[i].state == "Ready") {
+                    console.log(i);
+                    _RunningPID = i;
+                    _ResidentQueue[_RunningPID].state = "Running";
+                    _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
+                    _CPU.isExecuting = true;
+                }
+            }
+        };
         Shell.prototype.shellPS = function () {
             for (var i = 0; i < _RunningQueue.length; i++) {
                 if (_RunningQueue[i]) {
@@ -497,6 +511,21 @@ var TSOS;
             }
             else {
                 _ResidentQueue[_RunningPID].state = "Terminated";
+                var partition = _ResidentQueue[_RunningPID].memoryLimits.base;
+                switch (partition) {
+                    case 0:
+                        _CoreMemory.clearFirstPartition;
+                        _MemoryManager.firstPartitionAvailable = true;
+                        break;
+                    case 256:
+                        _CoreMemory.clearSecondPartition;
+                        _MemoryManager.secondPartitionAvailable = true;
+                        break;
+                    case 512:
+                        _CoreMemory.clearThirdPartition;
+                        _MemoryManager.thirdPartitionAvailable = true;
+                        break;
+                }
                 _RunningQueue[_RunningPID] = null;
                 _CPU.isExecuting = false;
             }

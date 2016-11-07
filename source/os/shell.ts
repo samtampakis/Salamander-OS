@@ -133,7 +133,13 @@ module TSOS {
                                   "quantum",
                                   "<int> - Set Round Robin quantum.");
             this.commandList[this.commandList.length] = sc;
+            
+            //runall
 
+            sc = new ShellCommand(this.shellRunall,
+                                  "runall",
+                                  " - Run all programs currently stored in memory.");
+            this.commandList[this.commandList.length] = sc;
             
             // ps  - list the running processes and their IDs
 
@@ -537,7 +543,6 @@ module TSOS {
                 _RunningPID = args;
                 _ResidentQueue[_RunningPID].state = "Running";
                 _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
-
                 _CPU.isExecuting = true;
             } else {
                 _StdOut.putText("Usage: run <pid>  Please supply a pid.");
@@ -576,6 +581,18 @@ module TSOS {
                 _StdOut.putText("Usage: quantum <int>  Please supply an integer.");
             } else {
                 _Quantum = newQuantum;
+            }
+        }
+        
+        public shellRunall(){
+            for(var i = 0; i < _ResidentQueue.length; i++){
+                if(_ResidentQueue[i].state == "Ready"){
+                    console.log(i);
+                    _RunningPID = i;
+                    _ResidentQueue[_RunningPID].state = "Running";
+                    _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
+                    _CPU.isExecuting = true;
+                }
             }
         }
         
