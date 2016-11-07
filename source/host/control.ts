@@ -98,24 +98,6 @@ module TSOS {
             document.getElementById("cpu-y").innerHTML = _CPU.Yreg.toString();
             document.getElementById("cpu-z").innerHTML = _CPU.Zflag.toString();
         
-            //Memory Display
-            var memoryHTML = "";
-            
-           /* for(var p = 0; p < 3; p++){
-            for(var i = 0; i < 256; i ++){
-                memoryHTML += "<tr> <td>" + p + "x" + ("000" + i.toString(16)).substr(-3) + "</td>";
-                for(var j = 0; j < 8; j ++){
-                    if(!(typeof _CoreMemory.memory[(p*256) + j + i].command == "string")){
-                        memoryHTML += "<td>" + _CoreMemory.memory[j + i] + "</td>";
-                    } else{
-                        memoryHTML += "<td>" + _CoreMemory.memory[j + i].command + "</td>";
-                    }
-                }
-                memoryHTML += "</tr>"
-            }
-            }
-            document.getElementById("core-memory").innerHTML = memoryHTML;*/
-
             //PCB Display
             var runningHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
             runningHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th></tr>";
@@ -138,11 +120,7 @@ module TSOS {
             }
             
             document.getElementById("RunningQueue-Display").innerHTML = runningHtml;
-            
-            
-            
-            
-            
+      
             var residentHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
             residentHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th></tr>";
             
@@ -164,9 +142,30 @@ module TSOS {
             }
             
             document.getElementById("ResidentQueue-Display").innerHTML = residentHtml;
-            
         }
 
+        public static displayMemory(){
+            var memoryHTML = "";
+           
+           var i = 0; 
+           for(var p = 0; p < 3; p++){
+                while(i < 255){
+                    memoryHTML += "<tr> <td>" + p + "x" + ("000" + i.toString(16)).substr(-3) + "</td>";
+                    for(var j = 0; j < 8; j ++){
+                        console.log((p*256) + i);
+                        if(typeof _CoreMemory.memory[(p*256) + i] == "string"){
+                            memoryHTML += "<td>" + _CoreMemory.memory[(p*256)+ i] + "</td>";
+                        } else{
+                            memoryHTML += "<td>" + _CoreMemory.memory[(p*256) + i].command + "</td>";
+                        }
+                        i++;
+                    }
+                    memoryHTML += "</tr>"
+                }
+                i = 0;
+            }
+            document.getElementById("core-memory").innerHTML = memoryHTML;            
+        }
         //
         // Host Events
         //
@@ -188,6 +187,7 @@ module TSOS {
             // Create and initialize Core Memory
             _CoreMemory = new CoreMemory();
             _CoreMemory.clearMemory();
+            Control.displayMemory();
             
             
             // ... then set the host clock pulse ...
