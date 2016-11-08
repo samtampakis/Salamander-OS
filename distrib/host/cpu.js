@@ -334,6 +334,17 @@ var TSOS;
             }
             //Fetch
             var currentPCB = _RunningQueue[_RunningPID];
+            if (currentPCB) {
+                _CPU.PC = currentPCB.cpu.PC;
+                _CPU.IR = currentPCB.cpu.IR;
+                _CPU.Acc = currentPCB.cpu.Acc;
+                _CPU.Xreg = currentPCB.cpu.Xreg;
+                _CPU.Yreg = currentPCB.cpu.Yreg;
+                _CPU.Zflag = currentPCB.cpu.Zflag;
+            }
+            else {
+                _CPU.resetCpu();
+            }
             var memoryAccess = _CPU.PC + currentPCB.memoryLimits.base;
             var fn = _CoreMemory.memory[memoryAccess].func;
             _CPU.IR = _CoreMemory.memory[memoryAccess].command;
