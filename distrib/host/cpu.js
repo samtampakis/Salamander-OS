@@ -133,7 +133,7 @@ var TSOS;
                     _RunningQueue[_RunningPID] = "Terminated";
                 }
                 else {
-                    _CoreMemory.memory[memLocation] = _CPU.Acc.toString(16);
+                    _CoreMemory.memory[memLocation] = ("00" + _CPU.Acc.toString(16)).substr(-2);
                 }
             }
             catch (err) {
@@ -223,15 +223,15 @@ var TSOS;
             _CPU.resetCpu();
             var partition = _ResidentQueue[_RunningPID].memoryLimits.base;
             switch (partition) {
-                case 0:
+                case PART0_BASE:
                     _CoreMemory.clearFirstPartition;
                     _MemoryManager.firstPartitionAvailable = true;
                     break;
-                case 256:
+                case PART1_BASE:
                     _CoreMemory.clearSecondPartition;
                     _MemoryManager.secondPartitionAvailable = true;
                     break;
-                case 512:
+                case PART2_BASE:
                     _CoreMemory.clearThirdPartition;
                     _MemoryManager.thirdPartitionAvailable = true;
                     break;

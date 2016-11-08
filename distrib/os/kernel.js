@@ -138,15 +138,15 @@ var TSOS;
                     _ResidentQueue[params].state = "Terminated";
                     var partition = _ResidentQueue[params].memoryLimits.base;
                     switch (partition) {
-                        case 0:
+                        case PART0_BASE:
                             _CoreMemory.clearFirstPartition();
                             _MemoryManager.firstPartitionAvailable = true;
                             break;
-                        case 256:
+                        case PART1_BASE:
                             _CoreMemory.clearSecondPartition();
                             _MemoryManager.secondPartitionAvailable = true;
                             break;
-                        case 512:
+                        case PART2_BASE:
                             _CoreMemory.clearThirdPartition();
                             _MemoryManager.thirdPartitionAvailable = true;
                             break;

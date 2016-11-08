@@ -361,15 +361,15 @@ var TSOS;
                 //Determine which Memory Partition to load into
                 var pcbMem;
                 if (_MemoryManager.firstPartitionAvailable) {
-                    pcbMem = new TSOS.ProcessMemory(0, 256, null);
+                    pcbMem = new TSOS.ProcessMemory(PART0_BASE, PART1_BASE, null);
                     _MemoryManager.firstPartitionAvailable = false;
                 }
                 else if (_MemoryManager.secondPartitionAvailable) {
-                    pcbMem = new TSOS.ProcessMemory(256, 512, null);
+                    pcbMem = new TSOS.ProcessMemory(PART1_BASE, PART2_BASE, null);
                     _MemoryManager.secondPartitionAvailable = false;
                 }
                 else if (_MemoryManager.thirdPartitionAvailable) {
-                    pcbMem = new TSOS.ProcessMemory(512, 768, null);
+                    pcbMem = new TSOS.ProcessMemory(PART2_BASE, MEMORY_LIMIT, null);
                     _MemoryManager.thirdPartitionAvailable = false;
                 }
                 else {

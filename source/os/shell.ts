@@ -450,10 +450,10 @@ module TSOS {
                     pcbMem = new ProcessMemory(PART0_BASE, PART1_BASE, null);
                     _MemoryManager.firstPartitionAvailable = false;
                 } else if(_MemoryManager.secondPartitionAvailable){
-                    pcbMem = new ProcessMemory(PART1_BASE, PART3_BASE, null);
+                    pcbMem = new ProcessMemory(PART1_BASE, PART2_BASE, null);
                     _MemoryManager.secondPartitionAvailable = false;
                 } else if(_MemoryManager.thirdPartitionAvailable){
-                    pcbMem = new ProcessMemory(PART3_BASE, MEMORY_LIMIT, null);
+                    pcbMem = new ProcessMemory(PART2_BASE, MEMORY_LIMIT, null);
                     _MemoryManager.thirdPartitionAvailable = false;
                 } else{
                     //If all memory partitions are full, send an error message to the user

@@ -159,15 +159,15 @@ module TSOS {
                     var partition = _ResidentQueue[params].memoryLimits.base;
             
                     switch(partition){
-                        case PART1_BASE:
+                        case PART0_BASE:
                             _CoreMemory.clearFirstPartition();
                             _MemoryManager.firstPartitionAvailable = true;
                             break;
-                        case PART2_BASE:
+                        case PART1_BASE:
                             _CoreMemory.clearSecondPartition();
                             _MemoryManager.secondPartitionAvailable = true;
                             break;                
-                        case PART3_BASE:
+                        case PART2_BASE:
                             _CoreMemory.clearThirdPartition();
                             _MemoryManager.thirdPartitionAvailable = true;
                             break;   
