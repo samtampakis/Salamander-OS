@@ -329,8 +329,21 @@ module TSOS {
                 Control.hostLog("Invalid op code. Terminating Program", "CPU");
                 _RunningQueue[_RunningPID].state = "Terminated";
             }
-            _ResidentQueue[_RunningPID].cpu = _CPU;
-            _RunningQueue[_RunningPID].cpu = _CPU;
+            
+            //Save CPU data in PCB
+            var storedCPU = new Cpu();
+            storedCPU.PC = _CPU.PC;
+            storedCPU.IR = _CPU.IR;
+            storedCPU.Acc = _CPU.Acc;
+            storedCPU.Xreg = _CPU.Xreg;
+            storedCPU.Yreg = _CPU.Yreg;
+            storedCPU.Zflag = _CPU.Zflag;
+            if( _RunningQueue[_RunningPID].state != "Terminated"){
+                storedCPU.isExecuting = true;    
+            } 
+            
+            _ResidentQueue[_RunningPID].cpu = storedCPU;
+            _RunningQueue[_RunningPID].cpu = storedCPU;
         }
     }
 }
