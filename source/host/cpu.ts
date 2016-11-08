@@ -113,7 +113,9 @@ module TSOS {
         //Op Code function definitions
        public loadCommand(args){
            if(args.length == 1){
+               console.log("A9");
                _CPU.Acc = parseInt(args[0], 16);
+               console.log(_CPU.Acc);
            }               
            else if(args.length == 2){
                var currentPCB = _RunningQueue[_RunningPID];
@@ -133,6 +135,7 @@ module TSOS {
        
        public storeCommand(args){
            var currentPCB = _RunningQueue[_RunningPID];
+           console.log("store command");
            try{
                 var memLocation = args[1] + args[0];
                 _CoreMemory.memory[parseInt(memLocation, 16)  + currentPCB.memoryLimits.base] = _CPU.Acc.toString(16);
@@ -143,30 +146,37 @@ module TSOS {
        }
 
        public add(args){
+           console.log("add command");
            var currentPCB = _RunningQueue[_RunningPID];
            try{
                var memLocation = args[1] + args[0];
                var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+               _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
+               console.log(_CPU.Acc);
             } catch(err){
                 Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                 _RunningQueue[_RunningPID] = "Terminated";
             }
-           _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
        }
        
        public loadX(args){
+           console.log("load X");
            if(args.length == 1){
+               console.log("branch 1");
                _CPU.Xreg = parseInt(args[0], 16);
+               console.log(_CPU.Xreg);
            } else if (args.length == 2){
+               console.log("branch 2");
                var currentPCB = _RunningQueue[_RunningPID];
                try{
                    var memLocation = args[1] + args[0];
                    var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                   _CPU.Xreg = parseInt(memVal, 16);
+                   console.log(_CPU.Xreg);
                 } catch(err){
                     Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                     _RunningQueue[_RunningPID] = "Terminated";
                 }
-               _CPU.Xreg = parseInt(memVal, 16);
            } else{
                 Control.hostLog("Invalid number of arguments. Terminating Program", "CPU");
                 _RunningQueue[_RunningPID] = "Terminated";
@@ -174,18 +184,23 @@ module TSOS {
        }
        
        public loadY(args){
+           console.log("load Y");
            if(args.length == 1){
+               console.log("branch 1");
                _CPU.Yreg = parseInt(args[0], 16);
+               console.log(_CPU.Yreg);
            } else if (args.length == 2){
+               console.log("branch 2");
                var currentPCB = _RunningQueue[_RunningPID];
                try{
                    var memLocation = args[1] + args[0];
                    var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                   _CPU.Yreg = parseInt(memVal, 16);
+                   console.log(_CPU.Yreg);
                 } catch(err){
                     Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                     _RunningQueue[_RunningPID] = "Terminated";
                 }
-               _CPU.Yreg = parseInt(memVal, 16);
            } else{
                 Control.hostLog("Invalid number of arguments. Terminating Program", "CPU");
                 _RunningQueue[_RunningPID] = "Terminated";
@@ -254,9 +269,12 @@ module TSOS {
        }
        
        public sysCall(args){
+           console.log("SysCall");
            if(_CPU.Xreg == 1){
+               console.log("branch 1");
                _StdOut.putText(_CPU.Yreg.toString());
            } else if (_CPU.Xreg == 2){
+               console.log("branch 2");
                var currentPCB = _RunningQueue[_RunningPID];
                var gettingString = true;
                var stringToPrint = "";
@@ -291,7 +309,7 @@ module TSOS {
             //Track PCB stats
             for(var i = 0; i < _RunningQueue.length; i++){
                 if(_RunningQueue[i]){
-                    if(_RunningQueue[i].state = "Waiting"){
+                    if(_RunningQueue[i].state == "Waiting"){
                         _RunningQueue[i].waitTime++;
                         _ResidentQueue[i].waitTime++;
                     }
