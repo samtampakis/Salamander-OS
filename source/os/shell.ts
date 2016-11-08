@@ -447,13 +447,13 @@ module TSOS {
                 //Determine which Memory Partition to load into
                 var pcbMem;
                 if(_MemoryManager.firstPartitionAvailable){
-                    pcbMem = new ProcessMemory(0, 256, null);
+                    pcbMem = new ProcessMemory(PART0_BASE, PART1_BASE, null);
                     _MemoryManager.firstPartitionAvailable = false;
                 } else if(_MemoryManager.secondPartitionAvailable){
-                    pcbMem = new ProcessMemory(256, 512, null);
+                    pcbMem = new ProcessMemory(PART1_BASE, PART3_BASE, null);
                     _MemoryManager.secondPartitionAvailable = false;
                 } else if(_MemoryManager.thirdPartitionAvailable){
-                    pcbMem = new ProcessMemory(512, 768, null);
+                    pcbMem = new ProcessMemory(PART3_BASE, MEMORY_LIMIT, null);
                     _MemoryManager.thirdPartitionAvailable = false;
                 } else{
                     //If all memory partitions are full, send an error message to the user

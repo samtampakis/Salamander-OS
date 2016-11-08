@@ -130,7 +130,7 @@ var TSOS;
             var i = 0;
             for (var p = 0; p < 3; p++) {
                 while (i < 255) {
-                    memoryHTML += "<tr> <td>" + "0x" + p + ("000" + i.toString(16)).substr(-2) + "</td>";
+                    memoryHTML += "<tr> <td>" + p + "x" + ("000" + i.toString(16)).substr(-3) + "</td>";
                     for (var j = 0; j < 8; j++) {
                         if (typeof _CoreMemory.memory[(p * 256) + i] == "string") {
                             memoryHTML += "<td>" + _CoreMemory.memory[(p * 256) + i] + "</td>";

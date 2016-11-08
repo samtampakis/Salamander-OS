@@ -26,6 +26,11 @@ const KILL_IRQ: number = 3;
 
 const ERROR_IRQ: number = -1;
 
+// Partition limit constants
+const PART0_BASE = 0;
+const PART1_BASE = 256;
+const PART2_BASE = 512;
+const MEMORY_LIMIT = 768;
 
 //
 // Global Variables
