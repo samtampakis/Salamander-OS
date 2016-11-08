@@ -118,13 +118,19 @@ module TSOS {
            else if(args.length == 2){
                var currentPCB = _RunningQueue[_RunningPID];
                try{
-                   var memLocation = args[1] + args[0];
-                   var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                   var memLocString = args[1] + args[0];
+                   var memLocation = parseInt(memLocString, 16) + currentPCB.memoryLimits.base;
+                    if(memLocation >= currentPCB.memoryLimits.limit){
+                        Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
+                        _RunningQueue[_RunningPID] = "Terminated";
+                    } else{
+                        var memVal = _CoreMemory.memory[memLocation];
+                        _CPU.Acc = parseInt(memVal, 16);
+                    }
                } catch(err){
                     Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                     _RunningQueue[_RunningPID] = "Terminated";
                }
-               _CPU.Acc = parseInt(memVal, 16);
            } else{
                 Control.hostLog("Invalid number of arguments. Terminating Program", "CPU");
                 _RunningQueue[_RunningPID] = "Terminated";
@@ -134,8 +140,14 @@ module TSOS {
        public storeCommand(args){
            var currentPCB = _RunningQueue[_RunningPID];
            try{
-                var memLocation = args[1] + args[0];
-                _CoreMemory.memory[parseInt(memLocation, 16)  + currentPCB.memoryLimits.base] = _CPU.Acc.toString(16);
+                var memLocString = args[1] + args[0];
+                var memLocation = parseInt(memLocString, 16) + currentPCB.memoryLimits.base;
+                if(memLocation >= currentPCB.memoryLimits.limit){
+                    Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
+                    _RunningQueue[_RunningPID] = "Terminated";
+                } else{
+                    _CoreMemory.memory[memLocation] = _CPU.Acc.toString(16);
+                }
            } catch(err){
                 Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                 _RunningQueue[_RunningPID] = "Terminated";
@@ -145,9 +157,15 @@ module TSOS {
        public add(args){
            var currentPCB = _RunningQueue[_RunningPID];
            try{
-               var memLocation = args[1] + args[0];
-               var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
-               _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
+               var memLocString = args[1] + args[0];
+                var memLocation = parseInt(memLocString, 16) + currentPCB.memoryLimits.base;
+                if(memLocation >= currentPCB.memoryLimits.limit){
+                    Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
+                    _RunningQueue[_RunningPID] = "Terminated";
+                } else{
+                    var memVal = _CoreMemory.memory[memLocation];
+                    _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
+                }
             } catch(err){
                 Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                 _RunningQueue[_RunningPID] = "Terminated";
@@ -160,9 +178,15 @@ module TSOS {
            } else if (args.length == 2){
                var currentPCB = _RunningQueue[_RunningPID];
                try{
-                   var memLocation = args[1] + args[0];
-                   var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
-                    _CPU.Xreg = parseInt(memVal, 16);
+                    var memLocString = args[1] + args[0];
+                    var memLocation = parseInt(memLocString, 16) + currentPCB.memoryLimits.base;
+                    if(memLocation >= currentPCB.memoryLimits.limit){
+                        Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
+                        _RunningQueue[_RunningPID] = "Terminated";
+                    } else{
+                        var memVal = _CoreMemory.memory[memLocation];
+                        _CPU.Xreg = parseInt(memVal, 16);
+                    }
                 } catch(err){
                     Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                     _RunningQueue[_RunningPID] = "Terminated";
@@ -179,9 +203,15 @@ module TSOS {
            } else if (args.length == 2){
                var currentPCB = _RunningQueue[_RunningPID];
                try{
-                   var memLocation = args[1] + args[0];
-                   var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
-                   _CPU.Yreg = parseInt(memVal, 16);
+                    var memLocString = args[1] + args[0];
+                    var memLocation = parseInt(memLocString, 16) + currentPCB.memoryLimits.base;
+                    if(memLocation >= currentPCB.memoryLimits.limit){
+                        Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
+                        _RunningQueue[_RunningPID] = "Terminated";
+                    } else{
+                        var memVal = _CoreMemory.memory[memLocation];
+                        _CPU.Yreg = parseInt(memVal, 16);
+                    }
                 } catch(err){
                     Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                     _RunningQueue[_RunningPID] = "Terminated";
@@ -221,10 +251,16 @@ module TSOS {
        public compare(args){
             var currentPCB = _RunningQueue[_RunningPID];
             try{
-                var memLocation = args[1] + args[0];
-                var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
-                if(_CPU.Xreg == parseInt(memVal, 16)){
-                    _CPU.Zflag = 1;
+                var memLocString = args[1] + args[0];
+                var memLocation = parseInt(memLocString, 16) + currentPCB.memoryLimits.base;
+                if(memLocation >= currentPCB.memoryLimits.limit){
+                    Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
+                    _RunningQueue[_RunningPID] = "Terminated";
+                } else{
+                    var memVal = _CoreMemory.memory[memLocation];
+                    if(_CPU.Xreg == parseInt(memVal, 16)){
+                        _CPU.Zflag = 1;
+                    }
                 }
             } catch(err){
                 Control.hostLog("Invalid memory location. Terminating Program", "CPU");
@@ -244,10 +280,16 @@ module TSOS {
        public increment(args){
            var currentPCB = _RunningQueue[_RunningPID];
            try{
-               var memLocation = args[1] + args[0];
-               var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
-               var incrVal = parseInt(memVal, 16) + 1;
-               _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base] = incrVal.toString(16);
+               var memLocString = args[1] + args[0];
+               var memLocation = parseInt(memLocString, 16) + currentPCB.memoryLimits.base;
+               if(memLocation >= currentPCB.memoryLimits.limit){
+                   Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
+                   _RunningQueue[_RunningPID] = "Terminated";
+               } else{
+                   var memVal = _CoreMemory.memory[memLocation];
+                   var incrVal = parseInt(memVal, 16) + 1;
+                   _CoreMemory.memory[memLocation] = incrVal.toString(16);
+               }
            } catch(err){
                Control.hostLog("Invalid memory location. Terminating Program", "CPU");
                _RunningQueue[_RunningPID] = "Terminated";
