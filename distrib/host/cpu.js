@@ -93,7 +93,6 @@ var TSOS;
             _CPU.Xreg = 0;
             _CPU.Yreg = 0;
             _CPU.Zflag = 0;
-            _CPU.isExecuting = false;
         };
         //Op Code function definitions
         Cpu.prototype.loadCommand = function (args) {
@@ -102,20 +101,42 @@ var TSOS;
             }
             else if (args.length == 2) {
                 var currentPCB = _RunningQueue[_RunningPID];
-                var memLocation = args[1] + args[0];
-                var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                try {
+                    var memLocation = args[1] + args[0];
+                    var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                }
+                catch (err) {
+                    TSOS.Control.hostLog("Invalid memory location. Terminating Program", "CPU");
+                    _RunningQueue[_RunningPID] = "Terminated";
+                }
                 _CPU.Acc = parseInt(memVal, 16);
+            }
+            else {
+                TSOS.Control.hostLog("Invalid number of arguments. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID] = "Terminated";
             }
         };
         Cpu.prototype.storeCommand = function (args) {
             var currentPCB = _RunningQueue[_RunningPID];
-            var memLocation = args[1] + args[0];
-            _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base] = _CPU.Acc.toString(16);
+            try {
+                var memLocation = args[1] + args[0];
+                _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base] = _CPU.Acc.toString(16);
+            }
+            catch (err) {
+                TSOS.Control.hostLog("Invalid memory location. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID] = "Terminated";
+            }
         };
         Cpu.prototype.add = function (args) {
             var currentPCB = _RunningQueue[_RunningPID];
-            var memLocation = args[1] + args[0];
-            var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+            try {
+                var memLocation = args[1] + args[0];
+                var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+            }
+            catch (err) {
+                TSOS.Control.hostLog("Invalid memory location. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID] = "Terminated";
+            }
             _CPU.Acc = _CPU.Acc + parseInt(memVal, 16);
         };
         Cpu.prototype.loadX = function (args) {
@@ -124,9 +145,19 @@ var TSOS;
             }
             else if (args.length == 2) {
                 var currentPCB = _RunningQueue[_RunningPID];
-                var memLocation = args[1] + args[0];
-                var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                try {
+                    var memLocation = args[1] + args[0];
+                    var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                }
+                catch (err) {
+                    TSOS.Control.hostLog("Invalid memory location. Terminating Program", "CPU");
+                    _RunningQueue[_RunningPID] = "Terminated";
+                }
                 _CPU.Xreg = parseInt(memVal, 16);
+            }
+            else {
+                TSOS.Control.hostLog("Invalid number of arguments. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID] = "Terminated";
             }
         };
         Cpu.prototype.loadY = function (args) {
@@ -135,22 +166,54 @@ var TSOS;
             }
             else if (args.length == 2) {
                 var currentPCB = _RunningQueue[_RunningPID];
-                var memLocation = args[1] + args[0];
-                var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                try {
+                    var memLocation = args[1] + args[0];
+                    var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+                }
+                catch (err) {
+                    TSOS.Control.hostLog("Invalid memory location. Terminating Program", "CPU");
+                    _RunningQueue[_RunningPID] = "Terminated";
+                }
                 _CPU.Yreg = parseInt(memVal, 16);
+            }
+            else {
+                TSOS.Control.hostLog("Invalid number of arguments. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID] = "Terminated";
             }
         };
         Cpu.prototype.noOp = function (args) {
         };
         Cpu.prototype.breakCommand = function (args) {
             _ResidentQueue[_RunningPID].state = "Terminated";
-            _RunningQueue[_RunningPID] = null;
             _CPU.resetCpu();
+            var partition = _ResidentQueue[_RunningPID].memoryLimits.base;
+            switch (partition) {
+                case 0:
+                    _CoreMemory.clearFirstPartition;
+                    _MemoryManager.firstPartitionAvailable = true;
+                    break;
+                case 256:
+                    _CoreMemory.clearSecondPartition;
+                    _MemoryManager.secondPartitionAvailable = true;
+                    break;
+                case 512:
+                    _CoreMemory.clearThirdPartition;
+                    _MemoryManager.thirdPartitionAvailable = true;
+                    break;
+                default:
+                    TSOS.Control.hostLog("Invalid memory parameters", "CPU");
+            }
         };
         Cpu.prototype.compare = function (args) {
             var currentPCB = _RunningQueue[_RunningPID];
-            var memLocation = args[1] + args[0];
-            var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+            try {
+                var memLocation = args[1] + args[0];
+                var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+            }
+            catch (err) {
+                TSOS.Control.hostLog("Invalid memory location. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID] = "Terminated";
+            }
             if (_CPU.Xreg == parseInt(memVal, 16)) {
                 _CPU.Zflag = 1;
             }
@@ -165,8 +228,14 @@ var TSOS;
         };
         Cpu.prototype.increment = function (args) {
             var currentPCB = _RunningQueue[_RunningPID];
-            var memLocation = args[1] + args[0];
-            var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+            try {
+                var memLocation = args[1] + args[0];
+                var memVal = _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base];
+            }
+            catch (err) {
+                TSOS.Control.hostLog("Invalid memory location. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID] = "Terminated";
+            }
             _CoreMemory.memory[parseInt(memLocation, 16) + currentPCB.memoryLimits.base] = parseInt(memVal, 16) + 1;
         };
         Cpu.prototype.sysCall = function (args) {
@@ -179,15 +248,20 @@ var TSOS;
                 var stringToPrint = "";
                 var i = _CPU.Yreg + currentPCB.memoryLimits.base;
                 while (i < currentPCB.memoryLimits.limit && gettingString) {
-                    if (_CoreMemory.memory[i] == 0) {
+                    var currentData = _CoreMemory.memory[i];
+                    if (currentData == 0) {
                         gettingString = false;
                     }
                     else {
-                        stringToPrint += String.fromCharCode(parseInt(_CoreMemory.memory[i], 16));
+                        stringToPrint += String.fromCharCode(parseInt(currentData, 16));
                         i++;
                     }
                 }
                 _StdOut.putText(stringToPrint);
+            }
+            else {
+                TSOS.Control.hostLog("Invalid number of arguments. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID] = "Terminated";
             }
         };
         Cpu.prototype.execute = function (fn, args) {
@@ -197,6 +271,17 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            //Track PCB stats
+            for (var i = 0; i < _RunningQueue.length; i++) {
+                if (_RunningQueue[i]) {
+                    if (_RunningQueue[i].state = "Waiting") {
+                        _RunningQueue[i].waitTime++;
+                        _ResidentQueue[i].waitTime++;
+                    }
+                    _RunningQueue[i].turnaroundTime++;
+                    _ResidentQueue[i].turnaroundTime++;
+                }
+            }
             //Fetch
             var currentPCB = _RunningQueue[_RunningPID];
             var memoryAccess = _CPU.PC + currentPCB.memoryLimits.base;
@@ -214,7 +299,14 @@ var TSOS;
             }
             _CPU.PC++;
             //Execute
-            this.execute(fn, args);
+            try {
+                this.execute(fn, args);
+            }
+            catch (err) {
+                TSOS.Control.hostLog("Invalid op code. Terminating Program", "CPU");
+                _RunningQueue[_RunningPID].state = "Terminated";
+            }
+            _ResidentQueue[_RunningPID].cpu = _CPU;
             _RunningQueue[_RunningPID].cpu = _CPU;
         };
         return Cpu;
