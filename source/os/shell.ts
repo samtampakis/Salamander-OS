@@ -425,6 +425,7 @@ module TSOS {
         
         public shellLoad(){
             var input = Control.getProgram();
+            console.log(input);
             var isValid = true;
             var i = 0
             if(isNaN(input.charCodeAt(0))){
@@ -479,7 +480,7 @@ module TSOS {
                 var numArgs;
             
             
-                for(var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base); i+=2){
+                for(var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base) * 2; i+=2){
                 
                     var lookup = input.charAt(i) + input.charAt(i+1);
                     
@@ -587,7 +588,6 @@ module TSOS {
         public shellRunall(){
             for(var i = 0; i < _ResidentQueue.length; i++){
                 if(_ResidentQueue[i].state == "Ready"){
-                    console.log(i);
                     _RunningPID = i;
                     _ResidentQueue[_RunningPID].state = "Running";
                     _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];

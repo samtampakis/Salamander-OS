@@ -342,6 +342,7 @@ var TSOS;
         };
         Shell.prototype.shellLoad = function () {
             var input = TSOS.Control.getProgram();
+            console.log(input);
             var isValid = true;
             var i = 0;
             if (isNaN(input.charCodeAt(0))) {
@@ -391,7 +392,7 @@ var TSOS;
                 var tempVal = new Array();
                 var lookingForOpCode = true;
                 var numArgs;
-                for (var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base); i += 2) {
+                for (var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base) * 2; i += 2) {
                     var lookup = input.charAt(i) + input.charAt(i + 1);
                     if (lookingForOpCode) {
                         var foundCode = false;
@@ -428,6 +429,7 @@ var TSOS;
                     }
                 }
                 pcb.memoryLimits.data = retVal;
+                console.log(pcb.memoryLimits.data);
                 var j = 0;
                 for (var i = pcb.memoryLimits.base; i < pcb.memoryLimits.limit; i++) {
                     if (pcb.memoryLimits.data[j]) {
@@ -438,6 +440,7 @@ var TSOS;
                     }
                     j++;
                 }
+                console.log(_CoreMemory);
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
             }
