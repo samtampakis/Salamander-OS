@@ -510,8 +510,8 @@ var TSOS;
                 _StdOut.putText("Usage: kill <pid>  Please supply a PID.");
             }
             else {
-                _ResidentQueue[_RunningPID].state = "Terminated";
-                var partition = _ResidentQueue[_RunningPID].memoryLimits.base;
+                _ResidentQueue[pid].state = "Terminated";
+                var partition = _ResidentQueue[pid].memoryLimits.base;
                 switch (partition) {
                     case 0:
                         _CoreMemory.clearFirstPartition;
@@ -526,8 +526,6 @@ var TSOS;
                         _MemoryManager.thirdPartitionAvailable = true;
                         break;
                 }
-                _RunningQueue[_RunningPID] = null;
-                _CPU.isExecuting = false;
             }
         };
         return Shell;
