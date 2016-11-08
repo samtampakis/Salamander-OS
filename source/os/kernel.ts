@@ -104,6 +104,9 @@ module TSOS {
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
                 Control.displayRunningStatus();
                 Control.displayMemory();
+                if(_Scheduler.roundRobin){
+                    _Scheduler.switchContextRR();   
+                }
                 _CPU.cycle();
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 Control.displayRunningStatus();
@@ -145,9 +148,11 @@ module TSOS {
                     _StdIn.handleInput();
                     break;
                 case SWITCH_IRQ:
-                    _RunningQueue[params[0]].state = "Waiting";
+                    if(_RunningQueue[_RunningPID]){
+                        _RunningQueue[_RunningPID].state = "Waiting";
+                    }
+                    _RunningPID = params;
                     _RunningQueue[_RunningPID].state = "Running";
-                    _RunningPID = params[1];
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");

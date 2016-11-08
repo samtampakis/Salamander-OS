@@ -9,7 +9,6 @@ var TSOS;
         }
         Scheduler.prototype.switchContextRR = function () {
             if (_RunningQueue[_RunningPID].state == "Terminated") {
-                console.log("Terminated prog");
                 this.counter = _Quantum;
                 delete _RunningQueue[_RunningPID];
                 var lookingForProg = true;
@@ -28,7 +27,6 @@ var TSOS;
                 }
             }
             if (_Scheduler.counter < _Quantum) {
-                console.log("Not this cycle!");
                 _Scheduler.counter++;
             }
             else if (_CPU.isExecuting) {

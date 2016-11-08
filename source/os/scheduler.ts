@@ -6,7 +6,6 @@ module TSOS {
         
         public switchContextRR(){
             if(_RunningQueue[_RunningPID].state == "Terminated"){
-                console.log("Terminated prog");
                 this.counter = _Quantum;
                 delete _RunningQueue[_RunningPID];
                 var lookingForProg = true;
@@ -26,7 +25,6 @@ module TSOS {
                 }
             }
             if(_Scheduler.counter < _Quantum){
-                console.log("Not this cycle!");
                 _Scheduler.counter ++;
             } else if (_CPU.isExecuting){
                 var interrupt = null;

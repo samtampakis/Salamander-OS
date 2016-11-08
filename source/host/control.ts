@@ -100,21 +100,24 @@ module TSOS {
         
             //PCB Display
             var runningHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
-            runningHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th></tr>";
+            runningHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th>";
+            runningHtml += "<th>Turnaround</th><th>Wait</th></tr>";
             
             for(var i = 0; i < _RunningQueue.length; i++){
             
                 if(_RunningQueue[i]){
-                    var currentPCB = _RunningQueue[i];
+                    var runningPCB = _RunningQueue[i];
                     runningHtml += "<tr>";
-                    runningHtml += "<th>" + currentPCB.number.toString() + "</th>";
-                    runningHtml += "<th>" + currentPCB.cpu.PC.toString() + "</th>";
-                    runningHtml += "<th>" + currentPCB.cpu.IR + "</th>";
-                    runningHtml += "<th>" + currentPCB.cpu.Acc.toString() + "</th>";
-                    runningHtml += "<th>" + currentPCB.cpu.Xreg.toString() + "</th>";
-                    runningHtml += "<th>" + currentPCB.cpu.Yreg.toString() + "</th>";
-                    runningHtml += "<th>" + currentPCB.cpu.Zflag.toString() + "</th>";
-                    runningHtml += "<th>" + currentPCB.state.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.number.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.cpu.PC.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.cpu.IR + "</th>";
+                    runningHtml += "<th>" + runningPCB.cpu.Acc.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.cpu.Xreg.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.cpu.Yreg.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.cpu.Zflag.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.state.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.turnaroundTime.toString() + "</th>";
+                    runningHtml += "<th>" + runningPCB.waitTime.toString() + "</th>";
                     runningHtml += "</tr>";
                 }
             }
@@ -122,21 +125,24 @@ module TSOS {
             document.getElementById("RunningQueue-Display").innerHTML = runningHtml;
       
             var residentHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
-            residentHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th></tr>";
+            residentHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th>"
+            residentHtml += "<th>Turnaround</th><th>Wait</th></tr>";
             
             for(var i = 0; i < _ResidentQueue.length; i++){
             
                 if(_ResidentQueue[i]){
-                    var currentPCB = _ResidentQueue[i];
+                    var storedPCB = _ResidentQueue[i];
                     residentHtml += "<tr>";
-                    residentHtml += "<th>" + currentPCB.number.toString() + "</th>";
-                    residentHtml += "<th>" + currentPCB.cpu.PC.toString() + "</th>";
-                    residentHtml += "<th>" + currentPCB.cpu.IR + "</th>";
-                    residentHtml += "<th>" + currentPCB.cpu.Acc.toString() + "</th>";
-                    residentHtml += "<th>" + currentPCB.cpu.Xreg.toString() + "</th>";
-                    residentHtml += "<th>" + currentPCB.cpu.Yreg.toString() + "</th>";
-                    residentHtml += "<th>" + currentPCB.cpu.Zflag.toString() + "</th>";
-                    residentHtml += "<th>" + currentPCB.state.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.number.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.cpu.PC.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.cpu.IR + "</th>";
+                    residentHtml += "<th>" + storedPCB.cpu.Acc.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.cpu.Xreg.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.cpu.Yreg.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.cpu.Zflag.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.state.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.turnaroundTime.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.waitTime.toString() + "</th>";
                     residentHtml += "</tr>";
                 }
             }
@@ -152,7 +158,6 @@ module TSOS {
                 while(i < 255){
                     memoryHTML += "<tr> <td>" + p + "x" + ("000" + i.toString(16)).substr(-3) + "</td>";
                     for(var j = 0; j < 8; j ++){
-                        console.log((p*256) + i);
                         if(typeof _CoreMemory.memory[(p*256) + i] == "string"){
                             memoryHTML += "<td>" + _CoreMemory.memory[(p*256)+ i] + "</td>";
                         } else{

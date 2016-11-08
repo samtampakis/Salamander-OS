@@ -88,6 +88,9 @@ var TSOS;
             else if (_CPU.isExecuting) {
                 TSOS.Control.displayRunningStatus();
                 TSOS.Control.displayMemory();
+                if (_Scheduler.roundRobin) {
+                    _Scheduler.switchContextRR();
+                }
                 _CPU.cycle();
             }
             else {
@@ -123,6 +126,13 @@ var TSOS;
                 case KEYBOARD_IRQ:
                     _krnKeyboardDriver.isr(params); // Kernel mode device driver
                     _StdIn.handleInput();
+                    break;
+                case SWITCH_IRQ:
+                    if (_RunningQueue[_RunningPID]) {
+                        _RunningQueue[_RunningPID].state = "Waiting";
+                    }
+                    _RunningPID = params;
+                    _RunningQueue[_RunningPID].state = "Running";
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
