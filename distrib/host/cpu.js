@@ -261,11 +261,12 @@ var TSOS;
             }
         };
         Cpu.prototype.branch = function (args) {
-            if (_CPU.Zflag == 0) {
+            if (_CPU.Zflag == 1) {
                 _CPU.PC = _CPU.PC + parseInt(args[0], 16);
                 while (_CPU.PC > 255) {
                     _CPU.PC -= 256;
                 }
+                _CPU.Zflag = 0;
             }
         };
         Cpu.prototype.increment = function (args) {
@@ -299,7 +300,7 @@ var TSOS;
                 var i = _CPU.Yreg + currentPCB.memoryLimits.base;
                 while (i < currentPCB.memoryLimits.limit && gettingString) {
                     var currentData = _CoreMemory.memory[i];
-                    if (currentData == 0) {
+                    if (currentData == "00" || currentData.command == "00") {
                         gettingString = false;
                     }
                     else {
