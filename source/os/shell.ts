@@ -599,7 +599,7 @@ module TSOS {
         public shellPS(){
             for(var i = 0; i < _RunningQueue.length; i++){
                 if(_RunningQueue[i]){
-                    _StdOut.putText("PID: " + i);
+                    _StdOut.putText("PID: " + i + " ");
                 }
             }
         }
@@ -609,24 +609,8 @@ module TSOS {
             if(isNaN(pid)){
                 _StdOut.putText("Usage: kill <pid>  Please supply a PID.");
             } else {
-                _ResidentQueue[pid].state = "Terminated";
-                
-                var partition = _ResidentQueue[pid].memoryLimits.base;
-            
-                switch(partition){
-                    case 0:
-                        _CoreMemory.clearFirstPartition;
-                        _MemoryManager.firstPartitionAvailable = true;
-                        break;
-                    case 256:
-                        _CoreMemory.clearSecondPartition;
-                        _MemoryManager.secondPartitionAvailable = true;
-                        break;                
-                    case 512:
-                        _CoreMemory.clearThirdPartition;
-                        _MemoryManager.thirdPartitionAvailable = true;
-                        break;   
-                }
+                var kill = new Interrupt(KILL_IRQ, pid);
+                _KernelInterruptQueue.enqueue(kill);
             }
         }
     }

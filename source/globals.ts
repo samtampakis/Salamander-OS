@@ -22,6 +22,8 @@ const KEYBOARD_IRQ: number = 1;
 
 const SWITCH_IRQ: number = 2;
 
+const KILL_IRQ: number = 3;
+
 const ERROR_IRQ: number = -1;
 
 

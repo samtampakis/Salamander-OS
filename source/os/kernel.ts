@@ -154,6 +154,25 @@ module TSOS {
                     _RunningPID = params;
                     _RunningQueue[_RunningPID].state = "Running";
                     break;
+                case KILL_IRQ:
+                    _ResidentQueue[params].state = "Terminated";
+                    var partition = _ResidentQueue[params].memoryLimits.base;
+            
+                    switch(partition){
+                        case 0:
+                            _CoreMemory.clearFirstPartition();
+                            _MemoryManager.firstPartitionAvailable = true;
+                            break;
+                        case 256:
+                            _CoreMemory.clearSecondPartition();
+                            _MemoryManager.secondPartitionAvailable = true;
+                            break;                
+                        case 512:
+                            _CoreMemory.clearThirdPartition();
+                            _MemoryManager.thirdPartitionAvailable = true;
+                            break;   
+                    }
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }

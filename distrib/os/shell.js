@@ -429,7 +429,6 @@ var TSOS;
                     }
                 }
                 pcb.memoryLimits.data = retVal;
-                console.log(pcb.memoryLimits.data);
                 var j = 0;
                 for (var i = pcb.memoryLimits.base; i < pcb.memoryLimits.limit; i++) {
                     if (pcb.memoryLimits.data[j]) {
@@ -440,7 +439,6 @@ var TSOS;
                     }
                     j++;
                 }
-                console.log(_CoreMemory);
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
             }
@@ -492,7 +490,6 @@ var TSOS;
         Shell.prototype.shellRunall = function () {
             for (var i = 0; i < _ResidentQueue.length; i++) {
                 if (_ResidentQueue[i].state == "Ready") {
-                    console.log(i);
                     _RunningPID = i;
                     _ResidentQueue[_RunningPID].state = "Running";
                     _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
@@ -503,7 +500,7 @@ var TSOS;
         Shell.prototype.shellPS = function () {
             for (var i = 0; i < _RunningQueue.length; i++) {
                 if (_RunningQueue[i]) {
-                    _StdOut.putText("PID: " + i);
+                    _StdOut.putText("PID: " + i + " ");
                 }
             }
         };
@@ -513,22 +510,8 @@ var TSOS;
                 _StdOut.putText("Usage: kill <pid>  Please supply a PID.");
             }
             else {
-                _ResidentQueue[pid].state = "Terminated";
-                var partition = _ResidentQueue[pid].memoryLimits.base;
-                switch (partition) {
-                    case 0:
-                        _CoreMemory.clearFirstPartition;
-                        _MemoryManager.firstPartitionAvailable = true;
-                        break;
-                    case 256:
-                        _CoreMemory.clearSecondPartition;
-                        _MemoryManager.secondPartitionAvailable = true;
-                        break;
-                    case 512:
-                        _CoreMemory.clearThirdPartition;
-                        _MemoryManager.thirdPartitionAvailable = true;
-                        break;
-                }
+                var kill = new TSOS.Interrupt(KILL_IRQ, pid);
+                _KernelInterruptQueue.enqueue(kill);
             }
         };
         return Shell;
