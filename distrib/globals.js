@@ -19,6 +19,11 @@ var KEYBOARD_IRQ = 1;
 var SWITCH_IRQ = 2;
 var KILL_IRQ = 3;
 var ERROR_IRQ = -1;
+// Partition limit constants
+var PART0_BASE = 0;
+var PART1_BASE = 256;
+var PART2_BASE = 512;
+var MEMORY_LIMIT = 768;
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
