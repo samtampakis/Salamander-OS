@@ -141,6 +141,13 @@ module TSOS {
                                   " - Run all programs currently stored in memory.");
             this.commandList[this.commandList.length] = sc;
             
+            //format
+
+            sc = new ShellCommand(this.shellFormat,
+                                  "format",
+                                  " - Format disk storage of the operating system.");
+            this.commandList[this.commandList.length] = sc;
+            
             // ps  - list the running processes and their IDs
 
             sc = new ShellCommand(this.shellPS,
@@ -593,6 +600,35 @@ module TSOS {
                     _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
                     _CPU.isExecuting = true;
                 }
+            }
+        }
+        
+        public shellFormat(){
+            try{
+                //Initialize MBR
+                sessionStorage.setItem("000", "-"+EMPTY_MEMORY);
+            
+                //Initialize Directory
+                for(var s = 0; s < 8; s++){
+                    for(var b = 0; b < 8; b++){
+                        if(!(s==0 && b==0)){
+                            sessionStorage.setItem("0"+s+b, "0"+EMPTY_MEMORY)
+                        }
+                    }
+                }
+            
+                //Initialize Files
+                for (var t = 1; t < 4; t++){
+                    for(var s = 0; s < 8; s++){
+                        for(var b = 0; b < 8; b++){
+                            sessionStorage.setItem(""+t+s+b, "0"+EMPTY_MEMORY)
+                        }
+                    }
+                }
+                
+                _StdOut.putText("Successfully formatted disk");
+            } catch(e){
+                _StdOut.putText("An error occurred while formatting the disk");
             }
         }
         

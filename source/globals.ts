@@ -32,6 +32,10 @@ const PART1_BASE = 256;
 const PART2_BASE = 512;
 const MEMORY_LIMIT = 768;
 
+//String to denote empty disk space
+//(It's 63 -'s)
+const EMPTY_MEMORY = "---------------------------------------------------------------"
+
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
