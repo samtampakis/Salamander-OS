@@ -33,12 +33,13 @@
    <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
    <script type="text/javascript" src="distrib/os/processMemory.js"></script>
    <script type="text/javascript" src="distrib/os/scheduler.js"></script>
+   <script type="text/javascript" src="distrib/os/fileSystemDeviceDriver.js"></script>
 
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment this line below to enable GLaDOS testing -->
-   <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip3.js"></script>
-   <!-- <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script> -->
+   <!--<script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip3.js"></script> -->
+   <!-- <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script> --> 
 </head>
 
 <body onload="onDocumentLoad()">
@@ -167,6 +168,15 @@
       </label>
     </div>
     
+    <div id="Disk-Display">
+      <label>
+      On Disk
+      <br>
+      <table id="on-disk" border = "1">
+      </table>
+      </label>
+    </div>
+        
 </div>
 
 <p class="footerText" style="clear:both;">

@@ -171,6 +171,22 @@ module TSOS {
             }
             document.getElementById("core-memory").innerHTML = memoryHTML;            
         }
+        
+        public static displayDisk() {
+            var diskHTML = "<tr><th>V/I</th><th>T,S,B</th><th>Data</th>";
+           
+            for (var t = 0; t < 4; t++){
+                for(var s = 0; s < 8; s++){
+                    for(var b = 0; b < 8; b++){
+                        var data = sessionStorage.getItem(""+t+s+b);
+                        diskHTML += "<tr><td>" + data.slice(0,1) + "</td><td>" + data.slice(1,4) + "</td><td>" + data.slice(4) + "</td></tr>";
+                    }
+                }
+            } 
+             
+            document.getElementById("on-disk").innerHTML = diskHTML;             
+        }
+        
         //
         // Host Events
         //
@@ -194,6 +210,9 @@ module TSOS {
             _CoreMemory.clearMemory();
             Control.displayMemory();
             
+            
+            //Display Disk
+            Control.displayDisk();
             
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
