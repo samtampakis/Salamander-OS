@@ -79,6 +79,9 @@ var TSOS;
             //runall
             sc = new TSOS.ShellCommand(this.shellRunall, "runall", " - Run all programs currently stored in memory.");
             this.commandList[this.commandList.length] = sc;
+            //format
+            sc = new TSOS.ShellCommand(this.shellFormat, "format", " - Format disk storage of the operating system.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             sc = new TSOS.ShellCommand(this.shellPS, "ps", " - List the running processes and their IDs.");
             this.commandList[this.commandList.length] = sc;
@@ -495,6 +498,15 @@ var TSOS;
                     _RunningQueue[_RunningPID] = _ResidentQueue[_RunningPID];
                     _CPU.isExecuting = true;
                 }
+            }
+        };
+        Shell.prototype.shellFormat = function () {
+            try {
+                _krnFileSystemDriver.format();
+                _StdOut.putText("Successfully formatted disk");
+            }
+            catch (e) {
+                _StdOut.putText("An error occurred while formatting the disk");
             }
         };
         Shell.prototype.shellPS = function () {

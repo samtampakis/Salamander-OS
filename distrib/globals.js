@@ -24,6 +24,9 @@ var PART0_BASE = 0;
 var PART1_BASE = 256;
 var PART2_BASE = 512;
 var MEMORY_LIMIT = 768;
+//String to denote empty disk space
+//(It's 63 -'s)
+var EMPTY_MEMORY = "---------------------------------------------------------------";
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
@@ -63,6 +66,7 @@ var _OsShell;
 var _SarcasticMode = false;
 // Global Device Driver Objects - page 12
 var _krnKeyboardDriver; //  = null;
+var _krnFileSystemDriver;
 var _hardwareClockID = null;
 // For testing (and enrichment)...
 var Glados = null; // This is the function Glados() in glados.js on Labouseur.com.

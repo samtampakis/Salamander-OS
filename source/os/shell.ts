@@ -605,27 +605,7 @@ module TSOS {
         
         public shellFormat(){
             try{
-                //Initialize MBR
-                sessionStorage.setItem("000", "-"+EMPTY_MEMORY);
-            
-                //Initialize Directory
-                for(var s = 0; s < 8; s++){
-                    for(var b = 0; b < 8; b++){
-                        if(!(s==0 && b==0)){
-                            sessionStorage.setItem("0"+s+b, "0"+EMPTY_MEMORY)
-                        }
-                    }
-                }
-            
-                //Initialize Files
-                for (var t = 1; t < 4; t++){
-                    for(var s = 0; s < 8; s++){
-                        for(var b = 0; b < 8; b++){
-                            sessionStorage.setItem(""+t+s+b, "0"+EMPTY_MEMORY)
-                        }
-                    }
-                }
-                
+                _krnFileSystemDriver.format();
                 _StdOut.putText("Successfully formatted disk");
             } catch(e){
                 _StdOut.putText("An error occurred while formatting the disk");
