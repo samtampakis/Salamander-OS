@@ -42,6 +42,34 @@ var TSOS;
                 }
             }
         };
+        FileSystemDeviceDriver.prototype.findAvailableDirectory = function () {
+            var tsb = "000";
+            for (var s = 0; s < 8; s++) {
+                for (var b = 0; b < 8; b++) {
+                    var currentData = sessionStorage.getItem("0" + s + b);
+                    if (currentData.charAt(0) == "0") {
+                        tsb = "0" + s + b;
+                        return tsb;
+                    }
+                }
+            }
+            return tsb;
+        };
+        FileSystemDeviceDriver.prototype.findAvailableData = function () {
+            var tsb = "000";
+            for (var t = 1; t < 4; t++) {
+                for (var s = 0; s < 8; s++) {
+                    for (var b = 0; b < 8; b++) {
+                        var currentData = sessionStorage.getItem("" + t + s + b);
+                        if (currentData.charAt(0) == "0") {
+                            tsb = "" + t + s + b;
+                            return tsb;
+                        }
+                    }
+                }
+            }
+            return tsb;
+        };
         return FileSystemDeviceDriver;
     }(TSOS.DeviceDriver));
     TSOS.FileSystemDeviceDriver = FileSystemDeviceDriver;
