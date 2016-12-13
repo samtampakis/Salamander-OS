@@ -82,6 +82,9 @@ var TSOS;
             //format
             sc = new TSOS.ShellCommand(this.shellFormat, "format", " - Format disk storage of the operating system.");
             this.commandList[this.commandList.length] = sc;
+            //create
+            sc = new TSOS.ShellCommand(this.shellCreate, "create", "<string> - Create a new File.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             sc = new TSOS.ShellCommand(this.shellPS, "ps", " - List the running processes and their IDs.");
             this.commandList[this.commandList.length] = sc;
@@ -507,6 +510,19 @@ var TSOS;
             }
             catch (e) {
                 _StdOut.putText("An error occurred while formatting the disk");
+            }
+        };
+        Shell.prototype.shellCreate = function (args) {
+            if (args.length > 0) {
+                var fileName = "";
+                for (var i = 0; i < args.length; i++) {
+                    fileName += args[i] + " ";
+                }
+                var res = _krnFileSystemDriver.createFile(fileName);
+                _StdOut.putText(res);
+            }
+            else {
+                _StdOut.putText("Usage: create <string>  Please supply a string.");
             }
         };
         Shell.prototype.shellPS = function () {

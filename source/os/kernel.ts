@@ -107,9 +107,11 @@ module TSOS {
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
                 Control.displayMemory();
+                Control.displayDisk();
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
                 Control.displayRunningStatus();
                 Control.displayMemory();
+                Control.displayDisk();
                 if(_Scheduler.roundRobin){
                     _Scheduler.switchContextRR();   
                 }

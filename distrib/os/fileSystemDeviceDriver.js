@@ -42,6 +42,19 @@ var TSOS;
                 }
             }
         };
+        FileSystemDeviceDriver.prototype.createFile = function (fileName) {
+            var dir = this.findAvailableDirectory();
+            if (dir == "000") {
+                return "Not enough directory space";
+            }
+            var data = this.findAvailableData();
+            if (data == "000") {
+                return "Not enough space in memory";
+            }
+            sessionStorage.setItem(dir, ("1" + data + fileName + EMPTY_MEMORY).substr(0, 60));
+            sessionStorage.setItem(data, "1" + EMPTY_MEMORY);
+            return "File Creation was successful";
+        };
         FileSystemDeviceDriver.prototype.findAvailableDirectory = function () {
             var tsb = "000";
             for (var s = 0; s < 8; s++) {

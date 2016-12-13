@@ -148,6 +148,14 @@ module TSOS {
                                   " - Format disk storage of the operating system.");
             this.commandList[this.commandList.length] = sc;
             
+            //create
+            
+            sc = new ShellCommand(this.shellCreate,
+                                  "create",
+                                  "<string> - Create a new File.");
+            this.commandList[this.commandList.length] = sc;
+            
+            
             // ps  - list the running processes and their IDs
 
             sc = new ShellCommand(this.shellPS,
@@ -609,6 +617,19 @@ module TSOS {
                 _StdOut.putText("Successfully formatted disk");
             } catch(e){
                 _StdOut.putText("An error occurred while formatting the disk");
+            }
+        }
+        
+        public shellCreate(args){
+            if (args.length > 0){
+                var fileName = "";
+                for(var i = 0; i < args.length; i++){
+                    fileName += args[i] + " ";
+                }
+                var res = _krnFileSystemDriver.createFile(fileName);
+                _StdOut.putText(res);
+            } else {
+                _StdOut.putText("Usage: create <string>  Please supply a string.");
             }
         }
         

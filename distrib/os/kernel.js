@@ -89,10 +89,12 @@ var TSOS;
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
                 TSOS.Control.displayMemory();
+                TSOS.Control.displayDisk();
             }
             else if (_CPU.isExecuting) {
                 TSOS.Control.displayRunningStatus();
                 TSOS.Control.displayMemory();
+                TSOS.Control.displayDisk();
                 if (_Scheduler.roundRobin) {
                     _Scheduler.switchContextRR();
                 }
