@@ -121,6 +121,26 @@ module TSOS {
             return tsb;
         }
         
+        public read(dir){
+            var dirValue = sessionStorage.getItem(dir);
+            var linkValue = dirValue.substr(1,3);
+            var res = "";
+            var moreLinkedFiles = true;
+            
+            while (moreLinkedFiles){
+                var storedVal = sessionStorage.getItem(linkValue);
+                linkValue = storedVal.substr(1,3);
+                if(linkValue == "---"){
+                    res += (storedVal.substr(4)).replace(/-/g, "")
+                    moreLinkedFiles = false;
+                } else{
+                    res += storedVal.substr(4);
+                }
+            }
+            
+            return res;
+        }
+        
         public listDirectory(){
             var listings = [];
             if (sessionStorage.getItem("000")){

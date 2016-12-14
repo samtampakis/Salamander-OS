@@ -162,6 +162,13 @@ module TSOS {
                                   "<name> <string> - Write to an existing file.");
             this.commandList[this.commandList.length] = sc;
             
+            //read
+            
+            sc = new ShellCommand(this.shellRead,
+                                  "read",
+                                  "<string> - Read existing file.");
+            this.commandList[this.commandList.length] = sc;
+            
             //ls
             
              sc = new ShellCommand(this.shellLS,
@@ -662,6 +669,19 @@ module TSOS {
                 _StdOut.putText(res);
             } else {
                 _StdOut.putText("Usage: write <name> <string>  Please supply a name and a string.");
+            }
+        }
+        
+        public shellRead(args){
+            if (args.length > 0){
+                var fileLocation = _krnFileSystemDriver.locationOfFile(args[0]);
+                if(fileLocation == "000"){
+                   res = "File does not exist."
+                } else {
+                    _StdOut.putText(_krnFileSystemDriver.read(fileLocation));
+                }
+            } else {
+                _StdOut.putText("Usage: read <string>  Please supply a string.");
             }
         }
         
