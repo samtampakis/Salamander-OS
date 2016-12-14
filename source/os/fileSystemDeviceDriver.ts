@@ -47,45 +47,132 @@ module TSOS {
         public createFile(fileName){
             var dir = this.findAvailableDirectory();
             if(dir == "000"){
-                return "Not enough directory space";
+                return "Directory space not available";
             }
-            var data = this.findAvailableData();
-            if (data == "000"){
-                return "Not enough space in memory";
+            var data = this.findAvailableData(1);
+            if (data == []){
+                return "Memory space not available";
             }
             sessionStorage.setItem(dir, ("1"+data+fileName +EMPTY_MEMORY).substr(0,60));
-            sessionStorage.setItem(data, "1"+EMPTY_MEMORY);
+            sessionStorage.setItem(data[0], "1"+EMPTY_MEMORY);
             return "File Creation was successful";
         }
         
+        public write(dir, data){
+            console.log(dir);
+            var res = "";
+            var numBlocks = Math.ceil(data.length / 60);
+            var assigningBlocks = true;
+            var assignedBlocks = this.getAllLinkedData(dir);
+            var enoughSpace = true;
+            var unassignedBlocks = numBlocks - assignedBlocks.length;
+            
+            if(unassignedBlocks <= 0){
+                assigningBlocks = false;
+            }
+            
+            if(assigningBlocks){
+                var newBlocks = this.findAvailableData(unassignedBlocks);
+                console.log(newBlocks);
+                
+                if(newBlocks == []){
+                    enoughSpace = false;
+                    res = "Not enough space in memory";
+                } 
+                
+                assignedBlocks = assignedBlocks.concat(newBlocks);
+            }
+            
+            
+            if(enoughSpace){
+                var dataAlreadyWritten = 0;
+                var dataToWrite = "";
+                for(var i = 0; i < numBlocks - 1; i++){
+                    dataToWrite = data.substr(dataAlreadyWritten, 60);
+                    console.log(dataAlreadyWritten);
+                    console.log(dataToWrite);
+                    dataAlreadyWritten += 60;
+                    console.log(dataAlreadyWritten);
+                    sessionStorage.setItem(assignedBlocks[i], "1" + assignedBlocks[i+1] + dataToWrite);
+                }
+                dataToWrite = data.substr(dataAlreadyWritten);
+                sessionStorage.setItem(assignedBlocks[numBlocks - 1], "1---" + (dataToWrite + EMPTY_MEMORY).substr(0,60) );
+                res = "Write Successful";
+            }
+            
+            
+            return res;
+            
+        }
         
         public findAvailableDirectory(){
             var tsb = "000";
+            if (sessionStorage.getItem("000")){
+                for(var s = 0; s < 8; s++){
+                    for(var b = 0; b < 8; b++){
+                        var currentData = sessionStorage.getItem("0"+s+b)
+                        if(currentData.charAt(0) == "0"){
+                            tsb = "0" + s + b;
+                            return tsb;
+                        }
+                    }
+                } 
+            }
+            return tsb;
+        }
+        
+        public findAvailableData(neededBlocks){
+            var dataBlocks = [];
+            if(sessionStorage.getItem("000")){
+                for (var t = 1; t < 4; t++){
+                    for(var s = 0; s < 8; s++){
+                        for(var b = 0; b < 8; b++){
+                            var currentData = sessionStorage.getItem(""+t+s+b);
+                            if(neededBlocks == 0){
+                                break;
+                            } else if(currentData.charAt(0) == "0"){
+                                dataBlocks.push("" + t + s + b);
+                                neededBlocks --;
+                            }
+                        }
+                    }
+                }
+            }
+            if(neededBlocks > 0){
+                dataBlocks = [];
+            }
+            return dataBlocks;
+        }
+        
+        public getAllLinkedData(currentBlock){
+            var assignedBlocks = [];
+            var possibleTSB = "---";
+            var gettingLinks = true;
+            var workingBlock = currentBlock;
+            
+            while(gettingLinks){
+                possibleTSB = (sessionStorage.getItem(workingBlock)).substr(1,3);
+                if(possibleTSB == "---"){
+                    gettingLinks = false;
+                } else{
+                    assignedBlocks.push(possibleTSB);
+                    workingBlock = possibleTSB;
+                }
+            }
+            return assignedBlocks;
+        }
+        
+        public locationOfFile(name){
+            var tsb = "000";
             for(var s = 0; s < 8; s++){
                 for(var b = 0; b < 8; b++){
-                    var currentData = sessionStorage.getItem("0"+s+b)
-                    if(currentData.charAt(0) == "0"){
+                    var currentData = sessionStorage.getItem("0"+s+b);
+                    if(currentData.substr(4, name.length) == name){
                         tsb = "0" + s + b;
                         return tsb;
                     }
                 }
             } 
-            return tsb;
-        }
-        
-        public findAvailableData(){
-            var tsb = "000";
-            for (var t = 1; t < 4; t++){
-                for(var s = 0; s < 8; s++){
-                    for(var b = 0; b < 8; b++){
-                        var currentData = sessionStorage.getItem(""+t+s+b);
-                        if(currentData.charAt(0) == "0"){
-                            tsb = "" + t + s + b;
-                            return tsb;
-                        }
-                    }
-                }
-            }
             return tsb;
         }
         

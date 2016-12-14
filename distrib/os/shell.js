@@ -85,6 +85,9 @@ var TSOS;
             //create
             sc = new TSOS.ShellCommand(this.shellCreate, "create", "<string> - Create a new File.");
             this.commandList[this.commandList.length] = sc;
+            //write
+            sc = new TSOS.ShellCommand(this.shellWrite, "write", "<name> <string> - Write to an existing file.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             sc = new TSOS.ShellCommand(this.shellPS, "ps", " - List the running processes and their IDs.");
             this.commandList[this.commandList.length] = sc;
@@ -523,6 +526,26 @@ var TSOS;
             }
             else {
                 _StdOut.putText("Usage: create <string>  Please supply a string.");
+            }
+        };
+        Shell.prototype.shellWrite = function (args) {
+            if (args.length > 1) {
+                var res = "";
+                var fileLocation = _krnFileSystemDriver.locationOfFile(args[0]);
+                if (fileLocation == "000") {
+                    res = "File does not exist.";
+                }
+                else {
+                    var data = "";
+                    for (var i = 1; i < args.length; i++) {
+                        data += args[i] + " ";
+                    }
+                    res = _krnFileSystemDriver.write(fileLocation, data);
+                }
+                _StdOut.putText(res);
+            }
+            else {
+                _StdOut.putText("Usage: write <name> <string>  Please supply a name and a string.");
             }
         };
         Shell.prototype.shellPS = function () {

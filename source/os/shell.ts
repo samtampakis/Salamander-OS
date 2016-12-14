@@ -155,6 +155,12 @@ module TSOS {
                                   "<string> - Create a new File.");
             this.commandList[this.commandList.length] = sc;
             
+            //write
+            
+            sc = new ShellCommand(this.shellWrite,
+                                  "write",
+                                  "<name> <string> - Write to an existing file.");
+            this.commandList[this.commandList.length] = sc;
             
             // ps  - list the running processes and their IDs
 
@@ -630,6 +636,25 @@ module TSOS {
                 _StdOut.putText(res);
             } else {
                 _StdOut.putText("Usage: create <string>  Please supply a string.");
+            }
+        }
+        
+        public shellWrite(args){
+            if (args.length > 1){
+                var res = "";
+                var fileLocation = _krnFileSystemDriver.locationOfFile(args[0]);
+                if(fileLocation == "000"){
+                   res = "File does not exist."
+                } else {
+                    var data = "";
+                    for(var i = 1; i < args.length; i++){
+                        data += args[i] + " ";
+                    }
+                    res = _krnFileSystemDriver.write(fileLocation, data);
+                }
+                _StdOut.putText(res);
+            } else {
+                _StdOut.putText("Usage: write <name> <string>  Please supply a name and a string.");
             }
         }
         
