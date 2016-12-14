@@ -125,6 +125,20 @@ var TSOS;
             }
             return res;
         };
+        FileSystemDeviceDriver.prototype.deleteFile = function (dir) {
+            var dirValue = sessionStorage.getItem(dir);
+            var linkValue = dirValue.substr(1, 3);
+            sessionStorage.setItem(dir, "0" + dirValue.substr(1));
+            var moreLinkedFiles = true;
+            while (moreLinkedFiles) {
+                var storedVal = sessionStorage.getItem(linkValue);
+                sessionStorage.setItem(linkValue, "0" + storedVal.substr(1));
+                linkValue = storedVal.substr(1, 3);
+                if (linkValue == "---") {
+                    moreLinkedFiles = false;
+                }
+            }
+        };
         FileSystemDeviceDriver.prototype.listDirectory = function () {
             var listings = [];
             if (sessionStorage.getItem("000")) {

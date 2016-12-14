@@ -169,6 +169,13 @@ module TSOS {
                                   "<string> - Read existing file.");
             this.commandList[this.commandList.length] = sc;
             
+            //delete
+            
+            sc = new ShellCommand(this.shellDelete,
+                                  "delete",
+                                  "<string> - Delete existing file.");
+            this.commandList[this.commandList.length] = sc;
+            
             //ls
             
              sc = new ShellCommand(this.shellLS,
@@ -642,11 +649,7 @@ module TSOS {
         
         public shellCreate(args){
             if (args.length > 0){
-                var fileName = "";
-                for(var i = 0; i < args.length; i++){
-                    fileName += args[i] + " ";
-                }
-                var res = _krnFileSystemDriver.createFile(fileName);
+                var res = _krnFileSystemDriver.createFile(args[0]);
                 _StdOut.putText(res);
             } else {
                 _StdOut.putText("Usage: create <string>  Please supply a string.");
@@ -656,6 +659,10 @@ module TSOS {
         public shellWrite(args){
             if (args.length > 1){
                 var res = "";
+                var fileName = "";
+                for(var i = 0; i < args.length; i++){
+                    fileName += args[i] + " ";
+                }
                 var fileLocation = _krnFileSystemDriver.locationOfFile(args[0]);
                 if(fileLocation == "000"){
                    res = "File does not exist."
@@ -676,12 +683,26 @@ module TSOS {
             if (args.length > 0){
                 var fileLocation = _krnFileSystemDriver.locationOfFile(args[0]);
                 if(fileLocation == "000"){
-                   res = "File does not exist."
+                   _StdOut.putText("File does not exist.");
                 } else {
                     _StdOut.putText(_krnFileSystemDriver.read(fileLocation));
                 }
             } else {
                 _StdOut.putText("Usage: read <string>  Please supply a string.");
+            }
+        }
+        
+        public shellDelete(args){
+            if (args.length > 0){
+                var fileLocation = _krnFileSystemDriver.locationOfFile(args[0]);
+                if(fileLocation == "000"){
+                   _StdOut.putText("File does not exist.");
+                } else {
+                    _krnFileSystemDriver.deleteFile(fileLocation)
+                    _StdOut.putText("Delete successful");
+                }
+            } else {
+                _StdOut.putText("Usage: delete <string>  Please supply a string.");
             }
         }
         
