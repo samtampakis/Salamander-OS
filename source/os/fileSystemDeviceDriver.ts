@@ -121,6 +121,23 @@ module TSOS {
             return tsb;
         }
         
+        public listDirectory(){
+            var listings = [];
+            if (sessionStorage.getItem("000")){
+                for(var s = 0; s < 8; s++){
+                    for(var b = 0; b < 8; b++){
+                        var currentData = sessionStorage.getItem("0"+s+b)
+                        if(currentData.charAt(0) == "1"){
+                            currentData = currentData.substr(4);
+                            currentData = currentData.replace(/-/g, "")
+                            listings.push(currentData);
+                        }
+                    }
+                } 
+            }
+            return listings;
+        }
+        
         public findAvailableData(neededBlocks){
             var dataBlocks = [];
             if(sessionStorage.getItem("000")){

@@ -162,6 +162,13 @@ module TSOS {
                                   "<name> <string> - Write to an existing file.");
             this.commandList[this.commandList.length] = sc;
             
+            //ls
+            
+             sc = new ShellCommand(this.shellLS,
+                                  "ls",
+                                  " - List the files currently stored on disk.");
+            this.commandList[this.commandList.length] = sc;
+            
             // ps  - list the running processes and their IDs
 
             sc = new ShellCommand(this.shellPS,
@@ -658,10 +665,25 @@ module TSOS {
             }
         }
         
+        public shellLS(){
+            var files = _krnFileSystemDriver.listDirectory();
+            console.log(files);
+            if(files == []){
+                _StdOut.putText("No files in directory");
+            } else{
+                for(var i = 0; i < files.length; i++){
+                    _StdOut.putText(files[i]);
+                    _StdOut.advanceLine();
+                }
+            }
+            
+        }
+        
         public shellPS(){
             for(var i = 0; i < _RunningQueue.length; i++){
                 if(_RunningQueue[i]){
                     _StdOut.putText("PID: " + i + " ");
+                    _StdOut.advanceLine();
                 }
             }
         }
