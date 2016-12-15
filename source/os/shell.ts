@@ -109,6 +109,12 @@ module TSOS {
                                   "<pid> - Executes the specified program.");
             this.commandList[this.commandList.length] = sc;
             
+            // setschedule [rr, fcfs, priority]
+            sc = new ShellCommand(this.shellSet,
+                                  "setschedule",
+                                  "[rr, fcfs, priority] - Sets the scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
+            
             // status <string>
             sc = new ShellCommand(this.shellStatus,
                                   "status",
@@ -595,6 +601,35 @@ module TSOS {
                 _CPU.isExecuting = true;
             } else {
                 _StdOut.putText("Usage: run <pid>  Please supply a pid.");
+            }
+        }
+        
+        public shellSet(args){
+            if (args.length > 0){
+                
+                var successful = false;
+                
+                if(args[0] == "priority"){
+                    _Scheduler.roundRobin = false;
+                    successful = true;
+                } else if(args[0] == "fcfs"){
+                    _Scheduler.roundRobin = true;
+                    _Quantum = Number.MAX_VALUE;
+                    successful = true;
+                } else if(args[0] == "rr") {
+                    _Scheduler.roundRobin = true;
+                    _Quantum = 6;
+                    successful = true;
+                }
+                
+                if(successful){
+                    _StdOut.putText("Scheduling algorithm set to " + args[0]);
+                } else {
+                    _StdOut.putText("Scheduling algorithm not updated. Please select a valid algorithm.");
+                }
+
+            } else {
+                _StdOut.putText("Usage: setschedule [rr, fcfs, priority]  Please select an algorithm.");
             }
         }
         
