@@ -53,6 +53,48 @@ module TSOS {
             }
         }
         
+        public switchContextPriority(){
+            if(_RunningQueue[_RunningPID].state == "Terminated"){
+                delete _RunningQueue[_RunningPID];
+                var lookingForProg = true;
+                var i = 0;
+                
+                //See if other programs are currently running
+                while(i < _RunningQueue.length && lookingForProg){
+                    if(_RunningQueue[i]){
+                        lookingForProg = false;
+                    }
+                    i++;
+                }
+                if(lookingForProg){
+                    Control.hostLog("CPU not executing", "Scheduler");
+                    _CPU.isExecuting = false;
+                }
+            
+                if (_CPU.isExecuting){
+                    var interrupt = null;
+                    var topPriority = Number.MAX_VALUE;
+                    
+                    for(var i = 0; i < _RunningQueue.length; i++){
+                        if(_RunningQueue[i].priority <= topPriority){
+                            topPriority = _RunningQueue[i].priority;
+                            _RunningPID = i;
+                        }
+                    }
+                    
+                    interrupt = new Interrupt(SWITCH_IRQ, _RunningPID);
+                    
+                    
+                    if (interrupt){
+                        Control.hostLog("Priority Context Switch", "Scheduler");
+                        console.log("INTERRUPT -- HORN BUSTER");
+                        _KernelInterruptQueue.enqueue(interrupt);
+                    } 
+                }
+            }
+            
+        }
+        
         
         
     }

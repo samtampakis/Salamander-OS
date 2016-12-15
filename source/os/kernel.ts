@@ -114,6 +114,8 @@ module TSOS {
                 Control.displayDisk();
                 if(_Scheduler.roundRobin){
                     _Scheduler.switchContextRR();   
+                } else {
+                    _Scheduler.switchContextPriority();
                 }
                 _CPU.cycle();
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {

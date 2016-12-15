@@ -101,7 +101,7 @@ module TSOS {
             //PCB Display
             var runningHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
             runningHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th>";
-            runningHtml += "<th>Turnaround</th><th>Wait</th></tr>";
+            runningHtml += "<th>Priority</th><th>Turnaround</th><th>Wait</th></tr>";
             
             for(var i = 0; i < _RunningQueue.length; i++){
             
@@ -116,6 +116,11 @@ module TSOS {
                     runningHtml += "<th>" + runningPCB.cpu.Yreg.toString() + "</th>";
                     runningHtml += "<th>" + runningPCB.cpu.Zflag.toString() + "</th>";
                     runningHtml += "<th>" + runningPCB.state.toString() + "</th>";
+                    if(runningPCB.priority == Number.MAX_VALUE){
+                        runningHtml += "<th>NONE</th>";
+                    } else {
+                        runningHtml += "<th>" + runningPCB.priority.toString()
+                    }
                     runningHtml += "<th>" + runningPCB.turnaroundTime.toString() + "</th>";
                     runningHtml += "<th>" + runningPCB.waitTime.toString() + "</th>";
                     runningHtml += "</tr>";
@@ -126,7 +131,7 @@ module TSOS {
       
             var residentHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
             residentHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th>"
-            residentHtml += "<th>Turnaround</th><th>Wait</th></tr>";
+            residentHtml += "<th>Priority</th><th>Turnaround</th><th>Wait</th></tr>";
             
             for(var i = 0; i < _ResidentQueue.length; i++){
             
@@ -141,6 +146,11 @@ module TSOS {
                     residentHtml += "<th>" + storedPCB.cpu.Yreg.toString() + "</th>";
                     residentHtml += "<th>" + storedPCB.cpu.Zflag.toString() + "</th>";
                     residentHtml += "<th>" + storedPCB.state.toString() + "</th>";
+                    if(storedPCB.priority == Number.MAX_VALUE){
+                        residentHtml += "<th>NONE</th>";
+                    } else {
+                        residentHtml += "<th>" + runningPCB.priority.toString()
+                    }
                     residentHtml += "<th>" + storedPCB.turnaroundTime.toString() + "</th>";
                     residentHtml += "<th>" + storedPCB.waitTime.toString() + "</th>";
                     residentHtml += "</tr>";

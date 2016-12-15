@@ -98,6 +98,9 @@ var TSOS;
                 if (_Scheduler.roundRobin) {
                     _Scheduler.switchContextRR();
                 }
+                else {
+                    _Scheduler.switchContextPriority();
+                }
                 _CPU.cycle();
             }
             else {

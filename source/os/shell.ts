@@ -100,7 +100,7 @@ module TSOS {
             // load
             sc = new ShellCommand(this.shellLoad,
                                   "load",
-                                  " - Validates user input.");
+                                  "<priority> - Loads user input and optionally assigns priority.");
             this.commandList[this.commandList.length] = sc;
             
             // run <pid>
@@ -465,9 +465,8 @@ module TSOS {
             _StdOut.putText(dateString);
         }
         
-        public shellLoad(){
+        public shellLoad(args){
             var input = Control.getProgram();
-            console.log(input);
             var isValid = true;
             var i = 0
             if(isNaN(input.charCodeAt(0))){
@@ -511,8 +510,15 @@ module TSOS {
                 var pid = _PID;
                 _PID++;
                 
+                var priority = Number.MAX_VALUE;
+                
+                //check if priority parameter was passed
+                if(args.length > 0){
+                    priority = parseInt(args[0]);
+                }
+                
                 //create PCB and add it to global array   
-                var pcb = new PCB("Ready", pid, new Cpu(), pcbMem);
+                var pcb = new PCB("Ready", pid, new Cpu(), pcbMem, priority);
                 _ResidentQueue[pid] = pcb;
                 
                 //load Memory in CPU
@@ -708,7 +714,6 @@ module TSOS {
         
         public shellLS(){
             var files = _krnFileSystemDriver.listDirectory();
-            console.log(files);
             if(files == []){
                 _StdOut.putText("No files in directory");
             } else{

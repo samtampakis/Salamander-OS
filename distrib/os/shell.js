@@ -59,7 +59,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellDate, "date", " - Displays the time.");
             this.commandList[this.commandList.length] = sc;
             // load
-            sc = new TSOS.ShellCommand(this.shellLoad, "load", " - Validates user input.");
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "<priority> - Loads user input and optionally assigns priority.");
             this.commandList[this.commandList.length] = sc;
             // run <pid>
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Executes the specified program.");
@@ -358,9 +358,8 @@ var TSOS;
             var dateString = "The date is " + date;
             _StdOut.putText(dateString);
         };
-        Shell.prototype.shellLoad = function () {
+        Shell.prototype.shellLoad = function (args) {
             var input = TSOS.Control.getProgram();
-            console.log(input);
             var isValid = true;
             var i = 0;
             if (isNaN(input.charCodeAt(0))) {
@@ -403,8 +402,13 @@ var TSOS;
                 //set pid
                 var pid = _PID;
                 _PID++;
+                var priority = Number.MAX_VALUE;
+                //check if priority parameter was passed
+                if (args.length > 0) {
+                    priority = parseInt(args[0]);
+                }
                 //create PCB and add it to global array   
-                var pcb = new TSOS.PCB("Ready", pid, new TSOS.Cpu(), pcbMem);
+                var pcb = new TSOS.PCB("Ready", pid, new TSOS.Cpu(), pcbMem, priority);
                 _ResidentQueue[pid] = pcb;
                 //load Memory in CPU
                 var tempVal = new Array();
@@ -588,7 +592,6 @@ var TSOS;
         };
         Shell.prototype.shellLS = function () {
             var files = _krnFileSystemDriver.listDirectory();
-            console.log(files);
             if (files == []) {
                 _StdOut.putText("No files in directory");
             }
