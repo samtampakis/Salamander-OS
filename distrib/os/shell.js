@@ -67,6 +67,9 @@ var TSOS;
             // setschedule [rr, fcfs, priority]
             sc = new TSOS.ShellCommand(this.shellSet, "setschedule", "[rr, fcfs, priority] - Sets the scheduling algorithm.");
             this.commandList[this.commandList.length] = sc;
+            // getschedule
+            sc = new TSOS.ShellCommand(this.shellGetSchedule, "getschedule", " - Gets the current scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
             // status <string>
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Change OS status to the specified string.");
             this.commandList[this.commandList.length] = sc;
@@ -505,6 +508,17 @@ var TSOS;
             }
             else {
                 _StdOut.putText("Usage: setschedule [rr, fcfs, priority]  Please select an algorithm.");
+            }
+        };
+        Shell.prototype.shellGetSchedule = function () {
+            if (!_Scheduler.roundRobin) {
+                _StdOut.putText("Current Schedule: Priority");
+            }
+            else if (_Scheduler.roundRobin && _Quantum == Number.MAX_VALUE) {
+                _StdOut.putText("Current Schedule: First Come First Serve");
+            }
+            else {
+                _StdOut.putText("Current Schedule: Round Robin");
             }
         };
         Shell.prototype.shellStatus = function (args) {

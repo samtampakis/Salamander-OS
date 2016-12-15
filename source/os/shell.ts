@@ -115,6 +115,12 @@ module TSOS {
                                   "[rr, fcfs, priority] - Sets the scheduling algorithm.");
             this.commandList[this.commandList.length] = sc;
             
+            // getschedule
+            sc = new ShellCommand(this.shellGetSchedule,
+                                  "getschedule",
+                                  " - Gets the current scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
+            
             // status <string>
             sc = new ShellCommand(this.shellStatus,
                                   "status",
@@ -630,6 +636,16 @@ module TSOS {
 
             } else {
                 _StdOut.putText("Usage: setschedule [rr, fcfs, priority]  Please select an algorithm.");
+            }
+        }
+        
+        public shellGetSchedule(){
+            if(!_Scheduler.roundRobin){
+                _StdOut.putText("Current Schedule: Priority");
+            } else if (_Scheduler.roundRobin && _Quantum == Number.MAX_VALUE){
+                _StdOut.putText("Current Schedule: First Come First Serve");
+            } else {
+                _StdOut.putText("Current Schedule: Round Robin");
             }
         }
         
