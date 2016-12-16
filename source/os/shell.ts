@@ -512,9 +512,7 @@ module TSOS {
                     pcbMem = new ProcessMemory(MEMORY_LIMIT, MEMORY_LIMIT, null);
                     memoryIsAvailable = false;
                 }
-            } else {
-                _StdOut.putText("Invalid input. Please review and try again.");
-            }
+             
             
                 //set pid
                 var pid = _PID;
@@ -600,13 +598,26 @@ module TSOS {
                     // Load onto disk if memory is not available
                     _krnFileSystemDriver.createFile("Process" + pid);
                     var fileLocation = _krnFileSystemDriver.locationOfFile("Process" + pid);
-                    _krnFileSystemDriver.write(fileLocation, pcb.memoryLimits.data.toString());
+                    var fileData = "";
+                    for(var i = 0; i < pcb.memoryLimits.data.length; i++){
+                        if(typeof pcb.memoryLimits.data[i] == "string"){
+                            fileData += pcb.memoryLimits.data[i];
+                        } else {
+                            fileData += pcb.memoryLimits.data[i].command;
+                        }
+                    }
+                    
+                    _krnFileSystemDriver.write(fileLocation, fileData);
                     
                 }
                 
                 
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
+                
+            } else {
+                _StdOut.putText("Invalid input. Please review and try again.");
+            }
               
         }
 
