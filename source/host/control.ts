@@ -131,7 +131,7 @@ module TSOS {
       
             var residentHtml = "<tr><th>PID</th><th>PC</th><th>IR</th><th>ACC</th>";
             residentHtml += "<th>X</th><th>Y</th><th>Z</th><th>State</th>"
-            residentHtml += "<th>Priority</th><th>Turnaround</th><th>Wait</th></tr>";
+            residentHtml += "<th>Priority</th><th>Turnaround</th><th>Wait</th><th>Location</th></tr>";
             
             for(var i = 0; i < _ResidentQueue.length; i++){
             
@@ -153,6 +153,7 @@ module TSOS {
                     }
                     residentHtml += "<th>" + storedPCB.turnaroundTime.toString() + "</th>";
                     residentHtml += "<th>" + storedPCB.waitTime.toString() + "</th>";
+                    residentHtml += "<th>" + storedPCB.storedLocation.toString() + "</th>";
                     residentHtml += "</tr>";
                 }
             }
