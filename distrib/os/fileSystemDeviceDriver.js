@@ -56,7 +56,6 @@ var TSOS;
             return "File Creation was successful";
         };
         FileSystemDeviceDriver.prototype.write = function (dir, data) {
-            console.log(dir);
             var res = "";
             var numBlocks = Math.ceil(data.length / 60);
             var assigningBlocks = true;
@@ -68,7 +67,6 @@ var TSOS;
             }
             if (assigningBlocks) {
                 var newBlocks = this.findAvailableData(unassignedBlocks);
-                console.log(newBlocks);
                 if (newBlocks == []) {
                     enoughSpace = false;
                     res = "Not enough space in memory";
@@ -80,10 +78,7 @@ var TSOS;
                 var dataToWrite = "";
                 for (var i = 0; i < numBlocks - 1; i++) {
                     dataToWrite = data.substr(dataAlreadyWritten, 60);
-                    console.log(dataAlreadyWritten);
-                    console.log(dataToWrite);
                     dataAlreadyWritten += 60;
-                    console.log(dataAlreadyWritten);
                     sessionStorage.setItem(assignedBlocks[i], "1" + assignedBlocks[i + 1] + dataToWrite);
                 }
                 dataToWrite = data.substr(dataAlreadyWritten);

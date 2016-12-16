@@ -59,7 +59,6 @@ module TSOS {
         }
         
         public write(dir, data){
-            console.log(dir);
             var res = "";
             var numBlocks = Math.ceil(data.length / 60);
             var assigningBlocks = true;
@@ -73,7 +72,6 @@ module TSOS {
             
             if(assigningBlocks){
                 var newBlocks = this.findAvailableData(unassignedBlocks);
-                console.log(newBlocks);
                 
                 if(newBlocks == []){
                     enoughSpace = false;
@@ -89,10 +87,7 @@ module TSOS {
                 var dataToWrite = "";
                 for(var i = 0; i < numBlocks - 1; i++){
                     dataToWrite = data.substr(dataAlreadyWritten, 60);
-                    console.log(dataAlreadyWritten);
-                    console.log(dataToWrite);
                     dataAlreadyWritten += 60;
-                    console.log(dataAlreadyWritten);
                     sessionStorage.setItem(assignedBlocks[i], "1" + assignedBlocks[i+1] + dataToWrite);
                 }
                 dataToWrite = data.substr(dataAlreadyWritten);
@@ -131,7 +126,7 @@ module TSOS {
                 var storedVal = sessionStorage.getItem(linkValue);
                 linkValue = storedVal.substr(1,3);
                 if(linkValue == "---"){
-                    res += (storedVal.substr(4)).replace(/-/g, "")
+                    res += (storedVal.substr(4)).replace(/-/g, "");
                     moreLinkedFiles = false;
                 } else{
                     res += storedVal.substr(4);

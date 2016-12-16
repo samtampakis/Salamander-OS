@@ -31,6 +31,7 @@ const PART0_BASE = 0;
 const PART1_BASE = 256;
 const PART2_BASE = 512;
 const MEMORY_LIMIT = 768;
+const MEMORY_SIZE = 256;
 
 //String to denote empty disk space
 //(It's 63 -'s)

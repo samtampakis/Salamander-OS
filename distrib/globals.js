@@ -24,6 +24,7 @@ var PART0_BASE = 0;
 var PART1_BASE = 256;
 var PART2_BASE = 512;
 var MEMORY_LIMIT = 768;
+var MEMORY_SIZE = 256;
 //String to denote empty disk space
 //(It's 63 -'s)
 var EMPTY_MEMORY = "---------------------------------------------------------------";

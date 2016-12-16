@@ -107,6 +107,7 @@ module TSOS {
             
                 if(_RunningQueue[i]){
                     var runningPCB = _RunningQueue[i];
+                    console.log(runningPCB);
                     runningHtml += "<tr>";
                     runningHtml += "<th>" + runningPCB.number.toString() + "</th>";
                     runningHtml += "<th>" + runningPCB.cpu.PC.toString() + "</th>";
@@ -119,7 +120,7 @@ module TSOS {
                     if(runningPCB.priority == Number.MAX_VALUE){
                         runningHtml += "<th>NONE</th>";
                     } else {
-                        runningHtml += "<th>" + runningPCB.priority.toString()
+                        runningHtml += "<th>" + runningPCB.priority + "</th>";
                     }
                     runningHtml += "<th>" + runningPCB.turnaroundTime.toString() + "</th>";
                     runningHtml += "<th>" + runningPCB.waitTime.toString() + "</th>";
@@ -184,7 +185,7 @@ module TSOS {
         }
         
         public static displayDisk() {
-            var diskHTML = "<tr><th>V/I</th><th>T,S,B</th><th>Data</th>";
+            var diskHTML = "<tr><th>Addr</th><th>V/I</th><th>T,S,B</th><th>Data</th>";
            
             var accessingStorage = true;
             
@@ -194,7 +195,7 @@ module TSOS {
                         for(var b = 0; b < 8; b++){
                             var data = sessionStorage.getItem(""+t+s+b);
                             if(data){
-                                diskHTML += "<tr><td>" + data.slice(0,1) + "</td><td>" + data.slice(1,4) + "</td><td>" + data.slice(4) + "</td></tr>";
+                                diskHTML += "<tr><td>"+""+t+s+b +"</td><td>" + data.slice(0,1) + "</td><td>" + data.slice(1,4) + "</td><td>" + data.slice(4) + "</td></tr>";
                             } else{
                                 accessingStorage = false;
                             }

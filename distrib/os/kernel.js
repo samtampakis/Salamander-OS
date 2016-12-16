@@ -95,13 +95,15 @@ var TSOS;
                 TSOS.Control.displayRunningStatus();
                 TSOS.Control.displayMemory();
                 TSOS.Control.displayDisk();
+                if (_RunningQueue[_RunningPID].storedLocation == "Memory") {
+                    _CPU.cycle();
+                }
                 if (_Scheduler.roundRobin) {
                     _Scheduler.switchContextRR();
                 }
                 else {
                     _Scheduler.switchContextPriority();
                 }
-                _CPU.cycle();
             }
             else {
                 TSOS.Control.displayRunningStatus();
@@ -138,6 +140,7 @@ var TSOS;
                     _StdIn.handleInput();
                     break;
                 case SWITCH_IRQ:
+                    console.log("handle interrupt");
                     if (_RunningQueue[_RunningPID]) {
                         _RunningQueue[_RunningPID].state = "Waiting";
                     }

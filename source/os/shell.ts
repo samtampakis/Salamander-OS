@@ -528,11 +528,10 @@ module TSOS {
                 if(memoryIsAvailable){
                     //create PCB and add it to global array   
                     var pcb = new PCB("Ready", pid, new Cpu(), pcbMem, priority, "Memory");
-                    _ResidentQueue[pid] = pcb;
                 } else {
                     var pcb = new PCB("Ready", pid, new Cpu(), pcbMem, priority, "Disk");
-                    _ResidentQueue[pid] = pcb;
                 }
+                _ResidentQueue[pid] = pcb;
                 //load Memory in CPU
                 var tempVal = new Array();
             

@@ -112,12 +112,14 @@ module TSOS {
                 Control.displayRunningStatus();
                 Control.displayMemory();
                 Control.displayDisk();
+                if(_RunningQueue[_RunningPID].storedLocation == "Memory"){
+                    _CPU.cycle();
+                }
                 if(_Scheduler.roundRobin){
                     _Scheduler.switchContextRR();   
                 } else {
                     _Scheduler.switchContextPriority();
                 }
-                _CPU.cycle();
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 Control.displayRunningStatus();
                 this.krnTrace("Idle");
@@ -158,6 +160,7 @@ module TSOS {
                     _StdIn.handleInput();
                     break;
                 case SWITCH_IRQ:
+                    console.log("handle interrupt");
                     if(_RunningQueue[_RunningPID]){
                         _RunningQueue[_RunningPID].state = "Waiting";
                     }
