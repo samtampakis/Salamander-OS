@@ -509,15 +509,13 @@ module TSOS {
                     pcbMem = new ProcessMemory(PART2_BASE, MEMORY_LIMIT, null);
                     _MemoryManager.thirdPartitionAvailable = false;
                 } else{
-                    //If all memory partitions are full, send an error message to the user
-                     _StdOut.putText("Memory is full. Please clear memory and try again.");
+                    pcbMem = new ProcessMemory(MEMORY_LIMIT, MEMORY_LIMIT, null);
                     memoryIsAvailable = false;
                 }
             } else {
                 _StdOut.putText("Invalid input. Please review and try again.");
             }
             
-            if(memoryIsAvailable){
                 //set pid
                 var pid = _PID;
                 _PID++;
@@ -529,10 +527,14 @@ module TSOS {
                     priority = parseInt(args[0]);
                 }
                 
-                //create PCB and add it to global array   
-                var pcb = new PCB("Ready", pid, new Cpu(), pcbMem, priority);
-                _ResidentQueue[pid] = pcb;
-                
+                if(memoryIsAvailable){
+                    //create PCB and add it to global array   
+                    var pcb = new PCB("Ready", pid, new Cpu(), pcbMem, priority, "Memory");
+                    _ResidentQueue[pid] = pcb;
+                } else {
+                    var pcb = new PCB("Ready", pid, new Cpu(), pcbMem, priority, "Disk");
+                    _ResidentQueue[pid] = pcb;
+                }
                 //load Memory in CPU
                 var tempVal = new Array();
             
@@ -540,7 +542,7 @@ module TSOS {
                 var numArgs;
             
             
-                for(var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base) * 2; i+=2){
+                for(var i = 0; i < MEMORY_SIZE * 2; i+=2){
                 
                     var lookup = input.charAt(i) + input.charAt(i+1);
                     
@@ -582,20 +584,30 @@ module TSOS {
                 }
 
                 pcb.memoryLimits.data = retVal;
-              
-                var j = 0;
-                for(var i = pcb.memoryLimits.base; i < pcb.memoryLimits.limit; i++){
-                    if(pcb.memoryLimits.data[j]){
-                        _CoreMemory.memory[i] = pcb.memoryLimits.data[j];
-                    } else {
-                        _CoreMemory.memory[i] = "00";
+
+                if(memoryIsAvailable){
+                    // Load into memory if memory is available        
+                    var j = 0;
+                    for(var i = pcb.memoryLimits.base; i < pcb.memoryLimits.limit; i++){
+                        if(pcb.memoryLimits.data[j]){
+                            _CoreMemory.memory[i] = pcb.memoryLimits.data[j];
+                        } else {
+                            _CoreMemory.memory[i] = "00";
+                        }
+                        j++;
                     }
-                    j++;
+                } else {
+                    // Load onto disk if memory is not available
+                    _krnFileSystemDriver.createFile("Process" + pid);
+                    var fileLocation = _krnFileSystemDriver.locationOfFile("Process" + pid);
+                    _krnFileSystemDriver.write(fileLocation, pcb.memoryLimits.data.toString());
+                    
                 }
+                
                 
                 //print pid
                 _StdOut.putText("Process ID: " + pid);
-            }  
+              
         }
 
         

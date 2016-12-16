@@ -396,67 +396,73 @@ var TSOS;
                     _MemoryManager.thirdPartitionAvailable = false;
                 }
                 else {
-                    //If all memory partitions are full, send an error message to the user
-                    _StdOut.putText("Memory is full. Please clear memory and try again.");
+                    pcbMem = new TSOS.ProcessMemory(MEMORY_LIMIT, MEMORY_LIMIT, null);
                     memoryIsAvailable = false;
                 }
             }
             else {
                 _StdOut.putText("Invalid input. Please review and try again.");
             }
+            //set pid
+            var pid = _PID;
+            _PID++;
+            var priority = Number.MAX_VALUE;
+            //check if priority parameter was passed
+            if (args.length > 0) {
+                priority = parseInt(args[0]);
+            }
             if (memoryIsAvailable) {
-                //set pid
-                var pid = _PID;
-                _PID++;
-                var priority = Number.MAX_VALUE;
-                //check if priority parameter was passed
-                if (args.length > 0) {
-                    priority = parseInt(args[0]);
-                }
                 //create PCB and add it to global array   
-                var pcb = new TSOS.PCB("Ready", pid, new TSOS.Cpu(), pcbMem, priority);
+                var pcb = new TSOS.PCB("Ready", pid, new TSOS.Cpu(), pcbMem, priority, "Memory");
                 _ResidentQueue[pid] = pcb;
-                //load Memory in CPU
-                var tempVal = new Array();
-                var lookingForOpCode = true;
-                var numArgs;
-                for (var i = 0; i < (pcb.memoryLimits.limit - pcb.memoryLimits.base) * 2; i += 2) {
-                    var lookup = input.charAt(i) + input.charAt(i + 1);
-                    if (lookingForOpCode) {
-                        var foundCode = false;
-                        var j = 0;
-                        while (foundCode == false && j < _OPCodes.length) {
-                            if (lookup == _OPCodes[j].command) {
-                                foundCode = true;
-                                var newOpCode = _OPCodes[j];
-                                numArgs = newOpCode.numArgs;
-                                if (numArgs > 0) {
-                                    lookingForOpCode = false;
-                                }
-                                tempVal[i] = newOpCode;
+            }
+            else {
+                var pcb = new TSOS.PCB("Ready", pid, new TSOS.Cpu(), pcbMem, priority, "Disk");
+                _ResidentQueue[pid] = pcb;
+            }
+            //load Memory in CPU
+            var tempVal = new Array();
+            var lookingForOpCode = true;
+            var numArgs;
+            for (var i = 0; i < MEMORY_SIZE * 2; i += 2) {
+                var lookup = input.charAt(i) + input.charAt(i + 1);
+                if (lookingForOpCode) {
+                    var foundCode = false;
+                    var j = 0;
+                    while (foundCode == false && j < _OPCodes.length) {
+                        if (lookup == _OPCodes[j].command) {
+                            foundCode = true;
+                            var newOpCode = _OPCodes[j];
+                            numArgs = newOpCode.numArgs;
+                            if (numArgs > 0) {
+                                lookingForOpCode = false;
                             }
-                            j++;
+                            tempVal[i] = newOpCode;
                         }
-                        if (foundCode == false) {
-                            tempVal[i] = input.charAt(i) + input.charAt(i + 1);
-                        }
+                        j++;
                     }
-                    else {
+                    if (foundCode == false) {
                         tempVal[i] = input.charAt(i) + input.charAt(i + 1);
-                        numArgs--;
-                        if (numArgs <= 0) {
-                            lookingForOpCode = true;
-                        }
                     }
                 }
-                //Remove undefined elements of the array
-                var retVal = new Array();
-                for (var i = 0; i < tempVal.length; i++) {
-                    if (tempVal[i]) {
-                        retVal.push(tempVal[i]);
+                else {
+                    tempVal[i] = input.charAt(i) + input.charAt(i + 1);
+                    numArgs--;
+                    if (numArgs <= 0) {
+                        lookingForOpCode = true;
                     }
                 }
-                pcb.memoryLimits.data = retVal;
+            }
+            //Remove undefined elements of the array
+            var retVal = new Array();
+            for (var i = 0; i < tempVal.length; i++) {
+                if (tempVal[i]) {
+                    retVal.push(tempVal[i]);
+                }
+            }
+            pcb.memoryLimits.data = retVal;
+            if (memoryIsAvailable) {
+                // Load into memory if memory is available        
                 var j = 0;
                 for (var i = pcb.memoryLimits.base; i < pcb.memoryLimits.limit; i++) {
                     if (pcb.memoryLimits.data[j]) {
@@ -467,9 +473,15 @@ var TSOS;
                     }
                     j++;
                 }
-                //print pid
-                _StdOut.putText("Process ID: " + pid);
             }
+            else {
+                // Load onto disk if memory is not available
+                _krnFileSystemDriver.createFile("Process" + pid);
+                var fileLocation = _krnFileSystemDriver.locationOfFile("Process" + pid);
+                _krnFileSystemDriver.write(fileLocation, pcb.memoryLimits.data.toString());
+            }
+            //print pid
+            _StdOut.putText("Process ID: " + pid);
         };
         Shell.prototype.shellRun = function (args) {
             if (args.length > 0) {
