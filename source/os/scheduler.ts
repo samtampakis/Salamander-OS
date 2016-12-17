@@ -86,16 +86,22 @@ module TSOS {
                 if (_CPU.isExecuting){
                     var interrupt = null;
                     var topPriority = Number.MAX_VALUE;
+                    var newPID = -1;
                     
                     for(var i = 0; i < _RunningQueue.length; i++){
                         if(_RunningQueue[i].priority <= topPriority){
                             topPriority = _RunningQueue[i].priority;
-                            _RunningPID = i;
+                            newPID = i;
                         }
                     }
                     
-                    interrupt = new Interrupt(SWITCH_IRQ, _RunningPID);
-                    
+                    if(newPID >= 0){
+                        if(_RunningQueue[newPID].memoryLimits.base == MEMORY_LIMIT){
+                            this.rollOut(_RunningPID, newPID);
+                        }
+
+                        interrupt = new Interrupt(SWITCH_IRQ, newPID);
+                    }
                     
                     if (interrupt){
                         Control.hostLog("Priority Context Switch", "Scheduler");

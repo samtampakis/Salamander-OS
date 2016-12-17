@@ -88,7 +88,6 @@ var TSOS;
             for (var i = 0; i < _RunningQueue.length; i++) {
                 if (_RunningQueue[i]) {
                     var runningPCB = _RunningQueue[i];
-                    console.log(runningPCB);
                     runningHtml += "<tr>";
                     runningHtml += "<th>" + runningPCB.number.toString() + "</th>";
                     runningHtml += "<th>" + runningPCB.cpu.PC.toString() + "</th>";
@@ -129,7 +128,7 @@ var TSOS;
                         residentHtml += "<th>NONE</th>";
                     }
                     else {
-                        residentHtml += "<th>" + runningPCB.priority.toString();
+                        residentHtml += "<th>" + storedPCB.priority.toString();
                     }
                     residentHtml += "<th>" + storedPCB.turnaroundTime.toString() + "</th>";
                     residentHtml += "<th>" + storedPCB.waitTime.toString() + "</th>";

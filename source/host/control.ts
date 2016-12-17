@@ -107,7 +107,6 @@ module TSOS {
             
                 if(_RunningQueue[i]){
                     var runningPCB = _RunningQueue[i];
-                    console.log(runningPCB);
                     runningHtml += "<tr>";
                     runningHtml += "<th>" + runningPCB.number.toString() + "</th>";
                     runningHtml += "<th>" + runningPCB.cpu.PC.toString() + "</th>";
@@ -150,7 +149,7 @@ module TSOS {
                     if(storedPCB.priority == Number.MAX_VALUE){
                         residentHtml += "<th>NONE</th>";
                     } else {
-                        residentHtml += "<th>" + runningPCB.priority.toString()
+                        residentHtml += "<th>" + storedPCB.priority.toString()
                     }
                     residentHtml += "<th>" + storedPCB.turnaroundTime.toString() + "</th>";
                     residentHtml += "<th>" + storedPCB.waitTime.toString() + "</th>";
