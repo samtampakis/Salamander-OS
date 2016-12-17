@@ -113,7 +113,11 @@ module TSOS {
         //Op Code function definitions
        public loadCommand(args){
            if(args.length == 1){
-               _CPU.Acc = parseInt(args[0], 16);
+               var data = "00"
+               if(typeof args[0] == "string"){
+                   data = args[0];
+               }
+               _CPU.Acc = parseInt(data, 16);
            }               
            else if(args.length == 2){
                var currentPCB = _RunningQueue[_RunningPID];
@@ -124,7 +128,10 @@ module TSOS {
                         Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
                         _RunningQueue[_RunningPID] = "Terminated";
                     } else{
-                        var memVal = _CoreMemory.memory[memLocation];
+                       var memVal = "00";
+                       if(typeof _CoreMemory.memory[memLocation] == "string"){
+                           memVal = _CoreMemory.memory[memLocation];
+                       }
                         _CPU.Acc = parseInt(memVal, 16);
                     }
                } catch(err){
@@ -174,7 +181,11 @@ module TSOS {
        
        public loadX(args){
            if(args.length == 1){
-               _CPU.Xreg = parseInt(args[0], 16);
+               var data = "00"
+               if(typeof args[0] == "string"){
+                   data = args[0];
+               }
+               _CPU.Xreg = parseInt(data, 16);
            } else if (args.length == 2){
                var currentPCB = _RunningQueue[_RunningPID];
                try{
@@ -184,7 +195,10 @@ module TSOS {
                         Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
                         _RunningQueue[_RunningPID] = "Terminated";
                     } else{
-                        var memVal = _CoreMemory.memory[memLocation];
+                        var memVal = "00";
+                        if(typeof _CoreMemory.memory[memLocation] == "string"){
+                           memVal = _CoreMemory.memory[memLocation];
+                        }
                         _CPU.Xreg = parseInt(memVal, 16);
                     }
                 } catch(err){
@@ -199,7 +213,11 @@ module TSOS {
        
        public loadY(args){
            if(args.length == 1){
-               _CPU.Yreg = parseInt(args[0], 16);
+               var data = "00"
+               if(typeof args[0] == "string"){
+                   data = args[0];
+               }
+               _CPU.Yreg = parseInt(data, 16);
            } else if (args.length == 2){
                var currentPCB = _RunningQueue[_RunningPID];
                try{
@@ -209,7 +227,10 @@ module TSOS {
                         Control.hostLog("Memory Out of Bounds. Terminating Program", "CPU");
                         _RunningQueue[_RunningPID] = "Terminated";
                     } else{
-                        var memVal = _CoreMemory.memory[memLocation];
+                       var memVal = "00";
+                       if(typeof _CoreMemory.memory[memLocation] == "string"){
+                           memVal = _CoreMemory.memory[memLocation];
+                       }
                         _CPU.Yreg = parseInt(memVal, 16);
                     }
                 } catch(err){

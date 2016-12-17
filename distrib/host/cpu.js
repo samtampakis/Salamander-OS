@@ -97,7 +97,11 @@ var TSOS;
         //Op Code function definitions
         Cpu.prototype.loadCommand = function (args) {
             if (args.length == 1) {
-                _CPU.Acc = parseInt(args[0], 16);
+                var data = "00";
+                if (typeof args[0] == "string") {
+                    data = args[0];
+                }
+                _CPU.Acc = parseInt(data, 16);
             }
             else if (args.length == 2) {
                 var currentPCB = _RunningQueue[_RunningPID];
@@ -109,7 +113,10 @@ var TSOS;
                         _RunningQueue[_RunningPID] = "Terminated";
                     }
                     else {
-                        var memVal = _CoreMemory.memory[memLocation];
+                        var memVal = "00";
+                        if (typeof _CoreMemory.memory[memLocation] == "string") {
+                            memVal = _CoreMemory.memory[memLocation];
+                        }
                         _CPU.Acc = parseInt(memVal, 16);
                     }
                 }
@@ -162,7 +169,11 @@ var TSOS;
         };
         Cpu.prototype.loadX = function (args) {
             if (args.length == 1) {
-                _CPU.Xreg = parseInt(args[0], 16);
+                var data = "00";
+                if (typeof args[0] == "string") {
+                    data = args[0];
+                }
+                _CPU.Xreg = parseInt(data, 16);
             }
             else if (args.length == 2) {
                 var currentPCB = _RunningQueue[_RunningPID];
@@ -174,7 +185,10 @@ var TSOS;
                         _RunningQueue[_RunningPID] = "Terminated";
                     }
                     else {
-                        var memVal = _CoreMemory.memory[memLocation];
+                        var memVal = "00";
+                        if (typeof _CoreMemory.memory[memLocation] == "string") {
+                            memVal = _CoreMemory.memory[memLocation];
+                        }
                         _CPU.Xreg = parseInt(memVal, 16);
                     }
                 }
@@ -190,7 +204,11 @@ var TSOS;
         };
         Cpu.prototype.loadY = function (args) {
             if (args.length == 1) {
-                _CPU.Yreg = parseInt(args[0], 16);
+                var data = "00";
+                if (typeof args[0] == "string") {
+                    data = args[0];
+                }
+                _CPU.Yreg = parseInt(data, 16);
             }
             else if (args.length == 2) {
                 var currentPCB = _RunningQueue[_RunningPID];
@@ -202,7 +220,10 @@ var TSOS;
                         _RunningQueue[_RunningPID] = "Terminated";
                     }
                     else {
-                        var memVal = _CoreMemory.memory[memLocation];
+                        var memVal = "00";
+                        if (typeof _CoreMemory.memory[memLocation] == "string") {
+                            memVal = _CoreMemory.memory[memLocation];
+                        }
                         _CPU.Yreg = parseInt(memVal, 16);
                     }
                 }
